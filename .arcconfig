@@ -1,0 +1,10 @@
+{
+    "project.name" : "PSP Intergation packet",
+    "phabricator.uri" : "https://phabricator.togethernetworks.com/",
+    "editor" : "vim",
+    "repository.callsign": "PSPINTEGRATION",
+    "unit.engine": "PhpunitTestEngine",
+    "unit.phpunit.binary": "vendor/bin/phpunit",
+    "phpunit_config": "tests/phpunit.xml",
+    "history.immutable": true
+}

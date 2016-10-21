@@ -1,0 +1,10 @@
+{
+    "linters" : {
+        "php-cs": {
+            "type": "phpcs",
+            "flags" : ["--standard=PSR2"],
+            "bin" : ["vendor/bin/phpcs"],
+            "include": "(^src/.*\\.php$)"
+        }
+  }
+}

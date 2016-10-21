@@ -1,0 +1,28 @@
+{
+    "name": "maxpay/maxpay-php",
+    "description": "Maxpay PHP Library",
+    "keywords": [
+        "maxpay",
+        "psp"
+    ],
+    "homepage": "https://maxpay.com/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maxpay team",
+            "homepage": "https://github.com/maxpay"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "ext-iconv": "*",
+        "ext-mbstring": "*",
+        "psr/log": "~1.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "1.5.3"
+    },
+    "autoload": {
+        "psr-4": { "Maxpay\\" : "src/" }
+    }
+}
