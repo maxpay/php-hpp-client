@@ -225,6 +225,7 @@ if ($scriney->validateCallback($result)) {
 ```
 
 #Refund api
+```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 $result = $scriney->refund('hppR1463555724.2658mId548aId9', true);
 if ($scriney->validateCallback($result)) {
@@ -240,7 +241,7 @@ if ($scriney->validateCallback($result)) {
       [checkSum] => ee7ecd3b401735c40c5da4c3dcaf38952df5721d9626402cbbc1ccadd65b5616
   )
 */
-
+```
 ## Development
 
 Install dependencies:
