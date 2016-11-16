@@ -52,6 +52,17 @@ echo $scriney->buildButton('userId')->setUserInfo(
       )->buildPopup();
 ```
 
+#Payment form with custom return urls:
+
+```php
+$scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
+echo $scriney->buildButton('userId')->setSuccessReturnUrl(
+        "https://example.com/success"
+    )->setDeclineReturnUrl(
+        "https://example.com/decline"
+    )->buildPopup();
+```
+
 #Payment form with custom params, params will be returned in callback:
 
 ```php
