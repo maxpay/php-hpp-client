@@ -13,7 +13,7 @@ class BaseProduct implements ProductInterface
 {
     const TYPE_SUBSCRIPTION = 'subscriptionProduct';
     const TYPE_FIXED = 'fixedProduct';
-    const TYPE_TRIAL = 'afterTrialProduct';
+    const TYPE_TRIAL = 'trialProduct';
 
     const DISCOUNT_AMOUNT = 'amountOff';
     const DISCOUNT_PERCENT = 'percentOff';
