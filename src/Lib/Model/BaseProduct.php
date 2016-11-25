@@ -211,10 +211,10 @@ class BaseProduct implements ProductInterface
             $result['postTrialProductId'] = $this->postTrialProductId;
         }
         if (!is_null($this->postTrialLength)) {
-            $result['postTrialLength'] = intval($this->postTrialLength);
+            $result['trialLength'] = intval($this->postTrialLength);
         }
         if (!is_null($this->postTrialPeriod)) {
-            $result['postTrialPeriod'] = $this->postTrialPeriod;
+            $result['trialPeriod'] = $this->postTrialPeriod;
         }
 
         return $result;
