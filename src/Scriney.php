@@ -170,22 +170,20 @@ class Scriney implements ScrineyInterface
     }
 
     /**
-     * Method refunds transaction and optionally stops linked subscription
+     * Method refunds transaction
      *
      * @param string $transactionId
-     * @param bool $stopSubscription
      * @throws GeneralMaxpayException
      * @return mixed[]
      */
-    public function refund($transactionId, $stopSubscription = false)
+    public function refund($transactionId)
     {
         try {
             $refundBuilder =  new RefundBuilder(
                 $this->identity,
                 $transactionId,
                 $this->logger,
-                self::HOST_BASE,
-                $stopSubscription
+                self::HOST_BASE
             );
 
             return $refundBuilder->send();

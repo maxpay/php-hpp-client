@@ -42,23 +42,18 @@ class RefundBuilder extends BaseBuilder
     /** @var SignatureHelper */
     private $signatureHelper;
 
-    /** @var bool */
-    private $stopSubscriptionFlag;
-
     /**
      * @param IdentityInterface $identity
      * @param string $transactionId
      * @param LoggerInterface $logger
      * @param string $baseHost
-     * @param bool $stopSubscriptionFlag
      * @throws GeneralMaxpayException
      */
     public function __construct(
         IdentityInterface $identity,
         $transactionId,
         LoggerInterface $logger,
-        $baseHost,
-        $stopSubscriptionFlag = false
+        $baseHost
     ) {
         parent::__construct($logger);
 
@@ -69,11 +64,6 @@ class RefundBuilder extends BaseBuilder
         $this->baseHost = $baseHost;
         $this->client = new CurlClient($this->baseHost . $this->action, $logger);
         $this->signatureHelper  = new SignatureHelper();
-
-        if (!is_bool($stopSubscriptionFlag)) {
-            throw new NotBooleanException('stopSubscriptionFlag');
-        }
-        $this->stopSubscriptionFlag = $stopSubscriptionFlag;
 
         $this->logger->info('Refund builder successfully initialized');
     }
@@ -86,8 +76,7 @@ class RefundBuilder extends BaseBuilder
     {
         $data = [
             'transactionId' => $this->transactionId,
-            'publicKey' => $this->identity->getPublicKey(),
-            'stopLinkedSubscription' => $this->stopSubscriptionFlag ? '1' : '0'
+            'publicKey' => $this->identity->getPublicKey()
         ];
 
         $data['signature'] = $this->signatureHelper->generate(
