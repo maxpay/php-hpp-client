@@ -41,11 +41,10 @@ interface ScrineyInterface
 
     /**
      * @param string $transactionId
-     * @param bool $stopSubscription
      * @throws GeneralMaxpayException
      * @return mixed[]
      */
-    public function refund($transactionId, $stopSubscription);
+    public function refund($transactionId);
 
     /**
      * Method for validate callback
