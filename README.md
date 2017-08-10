@@ -224,6 +224,16 @@ if ($scriney->validateCallback($result)) {
 }
 ```
 
+#Cancel post trial product api
+```php
+
+$scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
+$result = $scriney->cancelPostTrial('hppR1463555724.2658mId548aId9');
+if ($scriney->validateCallback($result)) {
+    //Callback is valid
+}
+```
+
 #Refund api
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 $result = $scriney->refund('hppR1463555724.2658mId548aId9', true);

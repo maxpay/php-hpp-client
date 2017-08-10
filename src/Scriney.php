@@ -3,6 +3,7 @@
 namespace Maxpay;
 
 use Maxpay\Lib\Component\ButtonBuilder;
+use Maxpay\Lib\Component\CancelPostTrialBuilder;
 use Maxpay\Lib\Component\RebillBuilder;
 use Maxpay\Lib\Component\RefundBuilder;
 use Maxpay\Lib\Component\StopSubscriptionBuilder;
@@ -19,7 +20,8 @@ use Psr\Log\NullLogger;
  */
 class Scriney implements ScrineyInterface
 {
-    const HOST_BASE = 'https://hpp.maxpay.com/';
+    /** @var string */
+    private $hostBase;
 
     /** @var LoggerInterface */
     private $logger;
@@ -31,11 +33,17 @@ class Scriney implements ScrineyInterface
      * @param string $publicKey Available in your Mportal
      * @param string $privateKey Available in your Mportal
      * @param LoggerInterface|null $logger Any PSR-3 logger
+     * @param string|null $hostBase
      * @throws GeneralMaxpayException
      */
-    public function __construct($publicKey, $privateKey, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        $publicKey,
+        $privateKey,
+        LoggerInterface $logger = null,
+        $hostBase = 'https://hpp.maxpay.com/'
+    ) {
         $this->logger = is_null($logger) ? new NullLogger() : $logger;
+        $this->hostBase = $hostBase;
 
         try {
             $this->identity = new Identity($publicKey, $privateKey);
@@ -74,7 +82,7 @@ class Scriney implements ScrineyInterface
     public function createRebillRequest($billToken, $userId)
     {
         try {
-            return new RebillBuilder($this->identity, $billToken, $userId, $this->logger, self::HOST_BASE);
+            return new RebillBuilder($this->identity, $billToken, $userId, $this->logger, $this->hostBase);
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(
                 "Can't init rebill builder",
@@ -106,7 +114,7 @@ class Scriney implements ScrineyInterface
     public function buildButton($userId)
     {
         try {
-            return new ButtonBuilder($this->identity, $userId, $this->logger, self::HOST_BASE);
+            return new ButtonBuilder($this->identity, $userId, $this->logger, $this->hostBase);
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(
                 "Can't init button builder",
@@ -144,7 +152,7 @@ class Scriney implements ScrineyInterface
                 $userId,
                 $transactionId,
                 $this->logger,
-                self::HOST_BASE
+                $this->hostBase
             );
 
             return $subscriptionBuilder->send();
@@ -184,7 +192,7 @@ class Scriney implements ScrineyInterface
                 $this->identity,
                 $transactionId,
                 $this->logger,
-                self::HOST_BASE,
+                $this->hostBase,
                 $stopSubscription
             );
 
@@ -255,6 +263,45 @@ class Scriney implements ScrineyInterface
         } catch (\Exception $ex) {
             $this->logger->error(
                 'Callback validation failed',
+                [
+                    'exception' => $ex,
+                ]
+            );
+
+            throw new GeneralMaxpayException($ex->getMessage(), $ex);
+        }
+    }
+
+    /**
+     * Method cancel post trial
+     *
+     * @param string $transactionId
+     * @throws GeneralMaxpayException
+     * @return mixed[]
+     */
+    public function cancelPostTrial($transactionId)
+    {
+        try {
+            $builder =  new CancelPostTrialBuilder(
+                $this->identity,
+                $transactionId,
+                $this->logger,
+                $this->hostBase
+            );
+
+            return $builder->send();
+        } catch (GeneralMaxpayException $e) {
+            $this->logger->error(
+                "Can't init stop subscription builder",
+                [
+                    'exception' => $e,
+                ]
+            );
+
+            throw $e;
+        } catch (\Exception $ex) {
+            $this->logger->error(
+                'Stop subscription builder initialization failed',
                 [
                     'exception' => $ex,
                 ]

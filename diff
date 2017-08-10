@@ -1,0 +1,231 @@
+diff --git a/src/Lib/Component/BaseBuilder.php b/src/Lib/Component/BaseBuilder.php
+index 7da7ab6..90c5a28 100644
+--- a/src/Lib/Component/BaseBuilder.php
++++ b/src/Lib/Component/BaseBuilder.php
+@@ -43,7 +43,7 @@ abstract class BaseBuilder
+      * Set up user information
+      *
+      * @param UserInfoInterface $userInfo
+-     * @return self
++     * @return static
+      */
+     public function setUserInfo(UserInfoInterface $userInfo)
+     {
+@@ -57,7 +57,7 @@ abstract class BaseBuilder
+      * e.g. ['custom_some_param' => 'some value']
+      *
+      * @param array $params
+-     * @return self
++     * @return static
+      * @throws GeneralMaxpayException
+      */
+     public function setCustomParams(array $params)
+@@ -84,7 +84,7 @@ abstract class BaseBuilder
+      * Setup a product that exists in Merchant Portal
+      *
+      * @param string $productId
+-     * @return self
++     * @return static
+      * @throws GeneralMaxpayException
+      */
+     public function setProductId($productId)
+diff --git a/src/Lib/Component/CancelPostTrialBuilder.php b/src/Lib/Component/CancelPostTrialBuilder.php
+new file mode 100644
+index 0000000..3d67956
+--- /dev/null
++++ b/src/Lib/Component/CancelPostTrialBuilder.php
+@@ -0,0 +1,72 @@
++<?php
++
++namespace Maxpay\Lib\Component;
++
++use Maxpay\Lib\Exception\GeneralMaxpayException;
++use Maxpay\Lib\Model\IdentityInterface;
++use Maxpay\Lib\Util\ClientInterface;
++use Maxpay\Lib\Util\CurlClient;
++use Maxpay\Lib\Util\SignatureHelper;
++use Maxpay\Lib\Util\Validator;
++use Psr\Log\LoggerInterface;
++
++/**
++ * Class RefundBuilder
++ * @package Maxpay\Lib\Component
++ */
++class CancelPostTrialBuilder extends BaseBuilder
++{
++    /** @var IdentityInterface */
++    private $identity;
++
++    /** @var string */
++    private $transactionId;
++
++    /** @var ClientInterface */
++    private $client;
++
++    /**
++     * @param IdentityInterface $identity
++     * @param string $transactionId
++     * @param LoggerInterface $logger
++     * @param string $baseHost
++     * @throws GeneralMaxpayException
++     */
++    public function __construct(
++        IdentityInterface $identity,
++        $transactionId,
++        LoggerInterface $logger,
++        $baseHost
++    ) {
++        parent::__construct($logger);
++
++        $validator = new Validator();
++        $validator->validateString('transactionId', $transactionId);
++
++        $this->identity = $identity;
++        $this->transactionId = $transactionId;
++        $this->client = new CurlClient($baseHost . 'api/cancel_post_trial', $logger);
++
++        $logger->info('Cancel post trial builder successfully initialized');
++    }
++
++    /**
++     * @return array
++     * @throws GeneralMaxpayException
++     */
++    public function send()
++    {
++        $data = [
++            'transactionId' => $this->transactionId,
++            'publicKey' => $this->identity->getPublicKey()
++        ];
++
++        $data['signature'] = (new SignatureHelper())->generate(
++            $data,
++            $this->identity->getPrivateKey(),
++            true
++        );
++
++        return $this->prepareAnswer($this->client->send($data));
++    }
++}
+diff --git a/src/Scriney.php b/src/Scriney.php
+index 8f4217d..99b9773 100644
+--- a/src/Scriney.php
++++ b/src/Scriney.php
+@@ -3,6 +3,7 @@
+ namespace Maxpay;
+ 
+ use Maxpay\Lib\Component\ButtonBuilder;
++use Maxpay\Lib\Component\CancelPostTrialBuilder;
+ use Maxpay\Lib\Component\RebillBuilder;
+ use Maxpay\Lib\Component\RefundBuilder;
+ use Maxpay\Lib\Component\StopSubscriptionBuilder;
+@@ -19,7 +20,8 @@ use Psr\Log\NullLogger;
+  */
+ class Scriney implements ScrineyInterface
+ {
+-    const HOST_BASE = 'https://hpp.maxpay.com/';
++    /** @var string */
++    private $hostBase;
+ 
+     /** @var LoggerInterface */
+     private $logger;
+@@ -31,11 +33,17 @@ class Scriney implements ScrineyInterface
+      * @param string $publicKey Available in your Mportal
+      * @param string $privateKey Available in your Mportal
+      * @param LoggerInterface|null $logger Any PSR-3 logger
++     * @param string|null $hostBase
+      * @throws GeneralMaxpayException
+      */
+-    public function __construct($publicKey, $privateKey, LoggerInterface $logger = null)
+-    {
++    public function __construct(
++        $publicKey,
++        $privateKey,
++        LoggerInterface $logger = null,
++        $hostBase = 'https://hpp.maxpay.com/'
++    ) {
+         $this->logger = is_null($logger) ? new NullLogger() : $logger;
++        $this->hostBase = $hostBase;
+ 
+         try {
+             $this->identity = new Identity($publicKey, $privateKey);
+@@ -74,7 +82,7 @@ class Scriney implements ScrineyInterface
+     public function createRebillRequest($billToken, $userId)
+     {
+         try {
+-            return new RebillBuilder($this->identity, $billToken, $userId, $this->logger, self::HOST_BASE);
++            return new RebillBuilder($this->identity, $billToken, $userId, $this->logger, $this->hostBase);
+         } catch (GeneralMaxpayException $e) {
+             $this->logger->error(
+                 "Can't init rebill builder",
+@@ -106,7 +114,7 @@ class Scriney implements ScrineyInterface
+     public function buildButton($userId)
+     {
+         try {
+-            return new ButtonBuilder($this->identity, $userId, $this->logger, self::HOST_BASE);
++            return new ButtonBuilder($this->identity, $userId, $this->logger, $this->hostBase);
+         } catch (GeneralMaxpayException $e) {
+             $this->logger->error(
+                 "Can't init button builder",
+@@ -144,7 +152,7 @@ class Scriney implements ScrineyInterface
+                 $userId,
+                 $transactionId,
+                 $this->logger,
+-                self::HOST_BASE
++                $this->hostBase
+             );
+ 
+             return $subscriptionBuilder->send();
+@@ -184,7 +192,7 @@ class Scriney implements ScrineyInterface
+                 $this->identity,
+                 $transactionId,
+                 $this->logger,
+-                self::HOST_BASE,
++                $this->hostBase,
+                 $stopSubscription
+             );
+ 
+@@ -263,4 +271,43 @@ class Scriney implements ScrineyInterface
+             throw new GeneralMaxpayException($ex->getMessage(), $ex);
+         }
+     }
++
++    /**
++     * Method cancel post trial
++     *
++     * @param string $transactionId
++     * @throws GeneralMaxpayException
++     * @return mixed[]
++     */
++    public function cancelPostTrial($transactionId)
++    {
++        try {
++            $builder =  new CancelPostTrialBuilder(
++                $this->identity,
++                $transactionId,
++                $this->logger,
++                $this->hostBase
++            );
++
++            return $builder->send();
++        } catch (GeneralMaxpayException $e) {
++            $this->logger->error(
++                "Can't init stop subscription builder",
++                [
++                    'exception' => $e,
++                ]
++            );
++
++            throw $e;
++        } catch (\Exception $ex) {
++            $this->logger->error(
++                'Stop subscription builder initialization failed',
++                [
++                    'exception' => $ex,
++                ]
++            );
++
++            throw new GeneralMaxpayException($ex->getMessage(), $ex);
++        }
++    }
+ }
