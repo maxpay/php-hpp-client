@@ -9,7 +9,7 @@ PHP 5.4 and later.
 You can install the bindings via [Composer](http://getcomposer.org/). Run the following command:
 
 ```bash
-composer require maxpay/maxpay-php
+composer require maxpay/hpp-client
 ```
 
 To use the bindings, use Composer's [autoload](https://getcomposer.org/doc/00-intro.md#autoloading):
@@ -50,6 +50,17 @@ echo $scriney->buildButton('userId')->setUserInfo(
               '6267746913'
           )
       )->buildPopup();
+```
+
+#Payment form with custom return urls:
+
+```php
+$scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
+echo $scriney->buildButton('userId')->setSuccessReturnUrl(
+        "https://example.com/success"
+    )->setDeclineReturnUrl(
+        "https://example.com/decline"
+    )->buildPopup();
 ```
 
 #Payment form with custom params, params will be returned in callback:
@@ -235,8 +246,9 @@ if ($scriney->validateCallback($result)) {
 ```
 
 #Refund api
+```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
-$result = $scriney->refund('hppR1463555724.2658mId548aId9', true);
+$result = $scriney->refund('hppR1463555724.2658mId548aId9');
 if ($scriney->validateCallback($result)) {
     //Callback is valid
 }
@@ -250,7 +262,7 @@ if ($scriney->validateCallback($result)) {
       [checkSum] => ee7ecd3b401735c40c5da4c3dcaf38952df5721d9626402cbbc1ccadd65b5616
   )
 */
-
+```
 ## Development
 
 Install dependencies:

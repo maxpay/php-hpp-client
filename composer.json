@@ -1,5 +1,5 @@
 {
-    "name": "maxpay/maxpay-php",
+    "name": "maxpay/hpp-client",
     "description": "Maxpay PHP Library",
     "keywords": [
         "maxpay",
@@ -24,5 +24,10 @@
     },
     "autoload": {
         "psr-4": { "Maxpay\\" : "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
     }
 }

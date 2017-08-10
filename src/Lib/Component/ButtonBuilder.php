@@ -49,6 +49,12 @@ class ButtonBuilder extends BaseBuilder
     /** @var string */
     private $baseHost;
 
+    /** @var string|null */
+    private $successUrl;
+
+    /** @var string|null */
+    private $declineUrl;
+
     /**
      * @param IdentityInterface $identity
      * @param string $userId
@@ -64,6 +70,56 @@ class ButtonBuilder extends BaseBuilder
         $this->userId = $this->validator->validateString('userId', $userId);
         $this->baseHost = $baseHost;
         $this->logger->info('Button builder successfully initialized');
+    }
+
+    /**
+     * Set success return url
+     *
+     * @param string $successUrl
+     * @return ButtonBuilder
+     * @throws GeneralMaxpayException
+     */
+    public function setSuccessReturnUrl($successUrl)
+    {
+        try {
+            $this->successUrl = $this->validator->validateString('successUrl', $successUrl);
+            $this->logger->info('Field `successUrl` successfully set');
+            return $this;
+        } catch (GeneralMaxpayException $e) {
+            $this->logger->error(
+                'Invalid success url',
+                [
+                    'exception' => $e,
+                ]
+            );
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Set success decline url
+     *
+     * @param string $declineUrl
+     * @return ButtonBuilder
+     * @throws GeneralMaxpayException
+     */
+    public function setDeclineReturnUrl($declineUrl)
+    {
+        try {
+            $this->declineUrl = $this->validator->validateString('declineUrl', $declineUrl);
+            $this->logger->info('Field `declineUrl` successfully set');
+            return $this;
+        } catch (GeneralMaxpayException $e) {
+            $this->logger->error(
+                'Invalid decline url',
+                [
+                    'exception' => $e,
+                ]
+            );
+
+            throw $e;
+        }
     }
 
     /**
@@ -173,6 +229,12 @@ class ButtonBuilder extends BaseBuilder
         $button->pushValue('buttontext', $this->buttonText);
         $button->pushValue('uniqueuserid', $this->userId);
         $button->pushValue('displaybuybutton', $this->showButton ? 'true' : 'false');
+        if (!is_null($this->successUrl)) {
+            $button->pushValue('success_url', $this->successUrl);
+        }
+        if (!is_null($this->declineUrl)) {
+            $button->pushValue('decline_url', $this->declineUrl);
+        }
         if (!is_null($this->productId)) {
             $button->pushValue('productpublicid', $this->productId);
         }
