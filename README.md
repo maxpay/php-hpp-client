@@ -20,21 +20,21 @@ require_once('vendor/autoload.php');
 
 ## Getting Started
 
-#Simple payment form:
+# Simple payment form:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 echo $scriney->buildButton('userId')->buildPopup();
 ```
 
-#Payment form with pre selected product:
+# Payment form with pre selected product:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 echo $scriney->buildButton('userId')->setProductId('productIdInMportal')->buildPopup();
 ```
 
-#Payment form with filled user information:
+# Payment form with filled user information:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -52,7 +52,7 @@ echo $scriney->buildButton('userId')->setUserInfo(
       )->buildPopup();
 ```
 
-#Payment form with custom return urls:
+# Payment form with custom return urls:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -63,7 +63,7 @@ echo $scriney->buildButton('userId')->setSuccessReturnUrl(
     )->buildPopup();
 ```
 
-#Payment form with custom params, params will be returned in callback:
+# Payment form with custom params, params will be returned in callback:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -75,7 +75,7 @@ echo $scriney->buildButton('userId')->setCustomParams(
     )->buildPopup();
 ```
 
-#Payment form with dynamic products:
+# Payment form with dynamic products:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -102,7 +102,7 @@ echo $scriney->buildButton('userId')->setCustomProducts(
           ]
       )->buildPopup();
 ```
-#Valdiate callback data:
+# Valdiate callback data:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -112,10 +112,10 @@ if ($scriney->validateCallback($_POST)) {
     echo 'invalid callback data';
 }
 ```
-##Api
+## Api
 
-#Rebilling api
-#Create simple rebilling request by existing product
+# Rebilling api
+# Create simple rebilling request by existing product
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 
@@ -141,13 +141,13 @@ try {
     //
 }
 
-if ($scriney->validateCallback($result)) {
-    //Callback is valid
+if ($scriney->validateApiResult($result)) {
+    //Api result is valid
 }
 
 ```
 
-#Create rebilling request with custom product and custom params
+# Create rebilling request with custom product and custom params
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 
@@ -186,9 +186,9 @@ try {
     //
 }
 
-if ($scriney->validateCallback($result)) {
-    //Callback is valid
-    //Callback example:
+if ($scriney->validateApiResult($result)) {
+    //Api result is valid
+    //Api result example:
     /*
         Array
         (
@@ -225,34 +225,34 @@ if ($scriney->validateCallback($result)) {
 
 ```
 
-#Cancel subscription api
+# Cancel subscription api
 ```php
 
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 $result = $scriney->stopSubscription('hppR1463555724.2658mId548aId9', 'userId');
-if ($scriney->validateCallback($result)) {
-    //Callback is valid
+if ($scriney->validateApiResult($result)) {
+    //Api result is valid
 }
 ```
 
-#Cancel post trial product api
+# Cancel post trial product api
 ```php
 
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 $result = $scriney->cancelPostTrial('hppR1463555724.2658mId548aId9');
-if ($scriney->validateCallback($result)) {
-    //Callback is valid
+if ($scriney->validateApiResult($result)) {
+    //Api result is valid
 }
 ```
 
-#Refund api
+# Refund api
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 $result = $scriney->refund('hppR1463555724.2658mId548aId9');
-if ($scriney->validateCallback($result)) {
-    //Callback is valid
+if ($scriney->validateApiResult($result)) {
+    //Api result is valid
 }
-//callback example
+//Api result example
 /*
   Array
   (

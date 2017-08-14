@@ -34,7 +34,7 @@ class FrameButton extends BaseButton
     /** @return string */
     public function build()
     {
-        $body = "src='". $this->baseHost ."client.js' ";
+        $body = "src='". $this->baseHost . $this->builderScriptName . ".js' ";
         foreach ($this->fieldList as $key => $value) {
             $body  .= "data-" . $key . "='" . $value . "' ";
         }

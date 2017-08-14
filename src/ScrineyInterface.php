@@ -54,4 +54,13 @@ interface ScrineyInterface
      * @return bool
      */
     public function validateCallback(array $data);
+
+    /**
+     * Method for validate api result
+     *
+     * @param array $data result received from Maxpay API
+     * @throws GeneralMaxpayException
+     * @return bool
+     */
+    public function validateApiResult(array $data);
 }

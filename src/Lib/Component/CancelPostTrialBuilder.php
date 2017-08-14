@@ -8,6 +8,7 @@ use Maxpay\Lib\Util\ClientInterface;
 use Maxpay\Lib\Util\CurlClient;
 use Maxpay\Lib\Util\SignatureHelper;
 use Maxpay\Lib\Util\Validator;
+use Maxpay\Lib\Util\ValidatorInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -20,10 +21,22 @@ class CancelPostTrialBuilder extends BaseBuilder
     private $identity;
 
     /** @var string */
+    private $action = 'api/cancel_post_trial';
+
+    /** @var string */
     private $transactionId;
 
     /** @var ClientInterface */
     private $client;
+
+    /** @var ValidatorInterface */
+    private $validator;
+
+    /** @var string */
+    private $baseHost;
+
+    /** @var SignatureHelper */
+    private $signatureHelper;
 
     /**
      * @param IdentityInterface $identity
@@ -40,13 +53,13 @@ class CancelPostTrialBuilder extends BaseBuilder
     ) {
         parent::__construct($logger);
 
-        $validator = new Validator();
-        $validator->validateString('transactionId', $transactionId);
-
+        $this->validator = new Validator();
         $this->identity = $identity;
-        $this->transactionId = $transactionId;
-        $this->client = new CurlClient($baseHost . 'api/cancel_post_trial', $logger);
+        $this->transactionId = $this->validator->validateString('transactionId', $transactionId);
+        $this->baseHost = $this->validator->validateString('baseHost', $baseHost);
+        $this->signatureHelper  = new SignatureHelper();
 
+        $this->client = new CurlClient($baseHost . $this->action, $logger);
         $logger->info('Cancel post trial builder successfully initialized');
     }
 
@@ -61,7 +74,7 @@ class CancelPostTrialBuilder extends BaseBuilder
             'publicKey' => $this->identity->getPublicKey()
         ];
 
-        $data['signature'] = (new SignatureHelper())->generate(
+        $data['signature'] = $this->signatureHelper->generate(
             $data,
             $this->identity->getPrivateKey(),
             true
