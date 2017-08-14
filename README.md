@@ -1,10 +1,10 @@
 You can sign up for a maxpay account at https://my.maxpay.com/
 
-## Requirements
+# Requirements
 
 PHP 5.4 and later.
 
-## Composer
+# Composer
 
 You can install the bindings via [Composer](http://getcomposer.org/). Run the following command:
 
@@ -18,23 +18,23 @@ To use the bindings, use Composer's [autoload](https://getcomposer.org/doc/00-in
 require_once('vendor/autoload.php');
 ```
 
-## Getting Started
+# Getting Started
 
-# Simple payment form:
+## Simple payment form:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 echo $scriney->buildButton('userId')->buildPopup();
 ```
 
-# Payment form with pre selected product:
+## Payment form with pre selected product:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 echo $scriney->buildButton('userId')->setProductId('productIdInMportal')->buildPopup();
 ```
 
-# Payment form with filled user information:
+## Payment form with filled user information:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -52,7 +52,7 @@ echo $scriney->buildButton('userId')->setUserInfo(
       )->buildPopup();
 ```
 
-# Payment form with custom return urls:
+## Payment form with custom return urls:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -63,7 +63,7 @@ echo $scriney->buildButton('userId')->setSuccessReturnUrl(
     )->buildPopup();
 ```
 
-# Payment form with custom params, params will be returned in callback:
+## Payment form with custom params, params will be returned in callback:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -75,7 +75,7 @@ echo $scriney->buildButton('userId')->setCustomParams(
     )->buildPopup();
 ```
 
-# Payment form with dynamic products:
+## Payment form with dynamic products:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -102,7 +102,7 @@ echo $scriney->buildButton('userId')->setCustomProducts(
           ]
       )->buildPopup();
 ```
-# Valdiate callback data:
+## Valdiate callback data:
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -112,10 +112,10 @@ if ($scriney->validateCallback($_POST)) {
     echo 'invalid callback data';
 }
 ```
-## Api
+# Api
 
-# Rebilling api
-# Create simple rebilling request by existing product
+## Rebilling api
+### Create simple rebilling request by existing product
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 
@@ -147,7 +147,7 @@ if ($scriney->validateApiResult($result)) {
 
 ```
 
-# Create rebilling request with custom product and custom params
+### Create rebilling request with custom product and custom params
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 
@@ -225,7 +225,7 @@ if ($scriney->validateApiResult($result)) {
 
 ```
 
-# Cancel subscription api
+## Cancel subscription api
 ```php
 
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -235,7 +235,7 @@ if ($scriney->validateApiResult($result)) {
 }
 ```
 
-# Cancel post trial product api
+## Cancel post trial product api
 ```php
 
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -245,7 +245,7 @@ if ($scriney->validateApiResult($result)) {
 }
 ```
 
-# Refund api
+## Refund api
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 $result = $scriney->refund('hppR1463555724.2658mId548aId9');
@@ -263,7 +263,7 @@ if ($scriney->validateApiResult($result)) {
   )
 */
 ```
-## Development
+# Development
 
 Install dependencies:
 
