@@ -9,7 +9,7 @@ namespace Maxpay\Lib\Model;
 class PopupButton extends BaseButton
 {
     /** @var string */
-    private $codeStart = "<div><form class='maxpayPaymentForm'><script class='maxpayScript' ";
+    private $codeStart = "<div><form class='pspPaymentForm'><script class='pspScript' ";
 
     /** @var string */
     private $codeEnd = "></script></form></div>";
@@ -27,7 +27,7 @@ class PopupButton extends BaseButton
     /** @return string */
     public function build()
     {
-        $body = "src='". $this->baseHost ."client.js' ";
+        $body = "src='". $this->baseHost . $this->builderScriptName . ".js' ";
         foreach ($this->fieldList as $key => $value) {
             $body  .= "data-" . $key . "='" . $value . "' ";
         }

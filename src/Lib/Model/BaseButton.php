@@ -11,6 +11,9 @@ use Maxpay\Lib\Util\StringHelper;
  */
 abstract class BaseButton implements RenderableInterface
 {
+    /** @var string */
+    protected $builderScriptName = 'paymentPage';
+
     /** @var string[] */
     protected $fieldList = [];
 

@@ -43,7 +43,7 @@ abstract class BaseBuilder
      * Set up user information
      *
      * @param UserInfoInterface $userInfo
-     * @return self
+     * @return static
      */
     public function setUserInfo(UserInfoInterface $userInfo)
     {
@@ -57,7 +57,7 @@ abstract class BaseBuilder
      * e.g. ['custom_some_param' => 'some value']
      *
      * @param array $params
-     * @return self
+     * @return static
      * @throws GeneralMaxpayException
      */
     public function setCustomParams(array $params)
@@ -84,7 +84,7 @@ abstract class BaseBuilder
      * Setup a product that exists in Merchant Portal
      *
      * @param string $productId
-     * @return self
+     * @return static
      * @throws GeneralMaxpayException
      */
     public function setProductId($productId)
