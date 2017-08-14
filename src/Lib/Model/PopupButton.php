@@ -9,7 +9,7 @@ namespace Maxpay\Lib\Model;
 class PopupButton extends BaseButton
 {
     /** @var string */
-    private $codeStart = "<div><form class='maxpayPaymentForm'><script class='maxpayScript' ";
+    private $codeStart = "<div><form class='pspPaymentForm'><script class='pspScript' ";
 
     /** @var string */
     private $codeEnd = "></script></form></div>";

@@ -9,10 +9,10 @@ namespace Maxpay\Lib\Model;
 class FrameButton extends BaseButton
 {
     /** @var string */
-    private $codeStart = "<div><script class='maxpayScript' ";
+    private $codeStart = "<div><script class='pspScript' ";
 
     /** @var string */
-    private $codeEnd = "></script><form class='maxpayPaymentForm'></form><iframe id='maxpay-hpp-#sign'></iframe></div>";
+    private $codeEnd = "></script><form class='pspPaymentForm'></form><iframe id='psp-hpp-#sign'></iframe></div>";
 
     /** @var string */
     private $baseHost;
