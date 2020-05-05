@@ -2,7 +2,7 @@ You can sign up for a maxpay account at https://my.maxpay.com/
 
 # Requirements
 
-PHP 5.4 and later.
+PHP 7.0 and later.
 
 # Composer
 
@@ -103,10 +103,11 @@ echo $scriney->buildButton('userId')->setCustomProducts(
       )->buildPopup();
 ```
 ## Valdiate callback data:
-
+$data - json string of callback response data read from file_get_contents('php://input');
+$headers - array of callback response headers
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
-if ($scriney->validateCallback($_POST)) {
+if ($scriney->validateCallback($data, $headers)) {
     echo 'callback data is valid';
 } else {
     echo 'invalid callback data';
@@ -245,10 +246,10 @@ if ($scriney->validateApiResult($result)) {
 }
 ```
 
-## Refund api
+## Full/partial Refund api
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
-$result = $scriney->refund('hppR1463555724.2658mId548aId9');
+$result = $scriney->refund('hppR1463555724.2658mId548aId9', 123.24, 'USD');
 if ($scriney->validateApiResult($result)) {
     //Api result is valid
 }

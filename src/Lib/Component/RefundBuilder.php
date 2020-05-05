@@ -3,7 +3,6 @@
 namespace Maxpay\Lib\Component;
 
 use Maxpay\Lib\Exception\GeneralMaxpayException;
-use Maxpay\Lib\Exception\NotBooleanException;
 use Maxpay\Lib\Model\IdentityInterface;
 use Maxpay\Lib\Util\ClientInterface;
 use Maxpay\Lib\Util\CurlClient;
@@ -19,7 +18,7 @@ use Psr\Log\LoggerInterface;
 class RefundBuilder extends BaseBuilder
 {
     /** @var string */
-    private $action = 'api/refund';
+    private $action = 'api/extended_refund';
 
     /** @var IdentityInterface */
     private $identity;
@@ -70,13 +69,18 @@ class RefundBuilder extends BaseBuilder
 
     /**
      * @return array
+     * @param float $amount
+     * @param string $currencyCode
      * @throws GeneralMaxpayException
+     * @return array
      */
-    public function send()
+    public function send(float $amount, string $currencyCode): array
     {
         $data = [
             'transactionId' => $this->transactionId,
-            'publicKey' => $this->identity->getPublicKey()
+            'publicKey' => $this->identity->getPublicKey(),
+            'amount' => $amount,
+            'currency' => $currencyCode,
         ];
 
         $data['signature'] = $this->signatureHelper->generate(
