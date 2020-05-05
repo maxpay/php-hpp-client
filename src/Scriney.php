@@ -20,8 +20,6 @@ use Psr\Log\NullLogger;
  */
 class Scriney implements ScrineyInterface
 {
-    const VALIDATION_TYPE_API = "API";
-    const VALIDATION_TYPE_CALLBACK = "CALLBACK";
 
     /** @var string */
     private $hostBase;
@@ -82,7 +80,7 @@ class Scriney implements ScrineyInterface
      * @throws GeneralMaxpayException
      * @return RebillBuilder
      */
-    public function createRebillRequest($billToken, $userId)
+    public function createRebillRequest(string $billToken, string $userId): RebillBuilder
     {
         try {
             return new RebillBuilder($this->identity, $billToken, $userId, $this->logger, $this->hostBase);
@@ -114,7 +112,7 @@ class Scriney implements ScrineyInterface
      * @throws GeneralMaxpayException
      * @return ButtonBuilder
      */
-    public function buildButton($userId)
+    public function buildButton(string $userId): ButtonBuilder
     {
         try {
             return new ButtonBuilder($this->identity, $userId, $this->logger, $this->hostBase);
@@ -145,9 +143,9 @@ class Scriney implements ScrineyInterface
      * @param string $transactionId
      * @param string $userId
      * @throws GeneralMaxpayException
-     * @return mixed[]
+     * @return array
      */
-    public function stopSubscription($transactionId, $userId)
+    public function stopSubscription(string $transactionId, string $userId): array
     {
         try {
             $subscriptionBuilder =  new StopSubscriptionBuilder(
@@ -181,13 +179,15 @@ class Scriney implements ScrineyInterface
     }
 
     /**
-     * Method refunds transaction
+     * Method for full/partial refund of transaction.
      *
      * @param string $transactionId
+     * @param float $amount Money amount to be refunded.
+     * @param string $currencyCode Transaction currency iso code.
      * @throws GeneralMaxpayException
-     * @return mixed[]
+     * @return array
      */
-    public function refund($transactionId)
+    public function refund(string $transactionId, float $amount, string $currencyCode): array
     {
         try {
             $refundBuilder =  new RefundBuilder(
@@ -197,7 +197,7 @@ class Scriney implements ScrineyInterface
                 $this->hostBase
             );
 
-            return $refundBuilder->send();
+            return $refundBuilder->send($amount, $currencyCode);
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(
                 "Can't init refund builder",
@@ -226,88 +226,111 @@ class Scriney implements ScrineyInterface
      * @throws GeneralMaxpayException
      * @return bool
      */
-    public function validateApiResult(array $data)
+    public function validateApiResult(array $data): bool
     {
-        return $this->validate(self::VALIDATION_TYPE_API, $data);
-    }
-
-    /**
-     * Method for validate callback
-     *
-     * @param array $data callback data from Maxpay
-     * @throws GeneralMaxpayException
-     * @return bool
-     */
-    public function validateCallback(array $data)
-    {
-        return $this->validate(self::VALIDATION_TYPE_CALLBACK, $data);
-    }
-
-    /**
-     * @param string $validationType
-     * @param mixed[] $data
-     * @throws GeneralMaxpayException
-     * @return bool
-     */
-    private function validate($validationType, $data)
-    {
-        switch ($validationType) {
-            case self::VALIDATION_TYPE_CALLBACK:
-            case self::VALIDATION_TYPE_API:
-                try {
-                    $signatureHelper = new SignatureHelper();
-                    $checkSum = null;
-                    $callbackData = [];
-                    foreach ($data as $k => $v) {
-                        if ($k !== 'checkSum') {
-                            $callbackData[$k] = $v;
-                        } else {
-                            $checkSum = $v;
-                        }
-                    }
-
-                    if (is_null($checkSum)) {
-                        $this->logger->error(
-                            'checkSum field is required',
-                            []
-                        );
-                        return false;
-                    }
-
-                    if ($checkSum !== $signatureHelper->generate($callbackData, $this->identity->getPrivateKey())) {
-                        $this->logger->error(
-                            'Checksum validation failure',
-                            []
-                        );
-                        return false;
-                    }
-
-                    $this->logger->info(
-                        'Checksum is valid',
-                        []
-                    );
-                    return true;
-                } catch (\Exception $ex) {
-                    $this->logger->error(
-                        'Checksum validation failure',
-                        [
-                            'exception' => $ex,
-                        ]
-                    );
-
-                    throw new GeneralMaxpayException($ex->getMessage(), $ex);
+        try {
+            $signatureHelper = new SignatureHelper();
+            $checkSum = null;
+            $callbackData = [];
+            foreach ($data as $k => $v) {
+                if ($k !== 'checkSum') {
+                    $callbackData[$k] = $v;
+                } else {
+                    $checkSum = $v;
                 }
+            }
 
-                break;
-            default:
+            if (is_null($checkSum)) {
                 $this->logger->error(
-                    'Invalid validation type received',
-                    [
-                        'incomingType' => $validationType
-                    ]
+                    'checkSum field is required',
+                    []
                 );
+                return false;
+            }
 
-                throw new GeneralMaxpayException('Invalid validation type received');
+            if ($checkSum !== $signatureHelper->generate($callbackData, $this->identity->getPrivateKey())) {
+                $this->logger->error(
+                    'Checksum validation failure',
+                    []
+                );
+                return false;
+            }
+
+            $this->logger->info(
+                'Checksum is valid',
+                []
+            );
+            return true;
+        } catch (\Exception $ex) {
+            $this->logger->error(
+                'Checksum validation failure',
+                [
+                    'exception' => $ex,
+                ]
+            );
+
+            throw new GeneralMaxpayException($ex->getMessage(), $ex);
+        }
+    }
+    
+    /**
+     * Method to validate callback
+     *
+     * @param string $data Json data string.
+     * @param array $headers Response headers.
+     * @throws GeneralMaxpayException
+     * @return bool
+     */
+    public function validateCallback(string $data, array $headers)
+    {
+        return $this->validate($data, $headers);
+    }
+
+    /**
+     * Validate if callback data is valid.
+     * @param string $data Json data string.
+     * @param array $headers
+     * @throws GeneralMaxpayException
+     * @return bool
+     */
+    private function validate($data, $headers)
+    {
+        try {
+            
+            $checkSum = $headers['X-Signature'] ?? null;
+            $signatureHelper = new SignatureHelper();
+
+            if (is_null($checkSum)) {
+                $this->logger->error(
+                    'Checksum attribute is required',
+                    []
+                );
+                return false;
+            }
+
+            if ($checkSum !== $signatureHelper->generateCallbackChecksum($data, $this->identity->getPrivateKey())) {
+                $this->logger->error(
+                    'Checksum validation failure',
+                    []
+                );
+                return false;
+            }
+
+            $this->logger->info(
+                'Checksum is valid',
+                []
+            );
+            
+            return true;
+        } catch (\Exception $ex) {
+            $this->logger->error(
+                'Checksum validation failure',
+                [
+                    'exception' => $ex,
+                ]
+            );
+
+            throw new GeneralMaxpayException($ex->getMessage(), $ex);
         }
     }
 
@@ -316,9 +339,9 @@ class Scriney implements ScrineyInterface
      *
      * @param string $transactionId
      * @throws GeneralMaxpayException
-     * @return mixed[]
+     * @return array
      */
-    public function cancelPostTrial($transactionId)
+    public function cancelPostTrial($transactionId): array
     {
         try {
             $builder =  new CancelPostTrialBuilder(

@@ -9,6 +9,35 @@ namespace Maxpay\Lib\Util;
 class SignatureHelper
 {
     /**
+     * Generates signature with sha256 algorithm to check callback.
+     *
+     * @param string $data
+     * @param string $secret
+     * @param bool $inLowercase
+     * @return string
+     */
+    public function generateCallbackChecksum(string $data, string $secret, bool $inLowercase = false): string
+    {
+        if (empty($data)) {
+            throw new \InvalidArgumentException('Data argument cant be empty');
+        }
+        if (!is_string($secret)) {
+            throw new \InvalidArgumentException('Secret must be string');
+        }
+        if (!is_bool($inLowercase)) {
+            throw new \InvalidArgumentException('inLowercase must be boolean');
+        }
+
+        $signature = $data . $secret;
+
+        if ($inLowercase) {
+            $signature = mb_strtolower($signature);
+        }
+
+        return hash('sha256', $signature);
+    }
+    
+     /**
      * Generates signature with sha256 algorithm.
      *
      * @param array $mixed
@@ -16,7 +45,7 @@ class SignatureHelper
      * @param bool $inLowercase
      * @return string
      */
-    public function generate(array $mixed, $secret, $inLowercase = false)
+    public function generate(array $mixed, string $secret, bool $inLowercase = false): string
     {
         if (count($mixed) < 1) {
             throw new \InvalidArgumentException('Data argument cant be empty');
@@ -45,7 +74,7 @@ class SignatureHelper
      *
      * @param array $data
      */
-    public function checkRecursive(array $data)
+    public function checkRecursive(array $data): void
     {
         foreach ($data as $elm) {
             if (is_array($elm)) {
@@ -66,7 +95,7 @@ class SignatureHelper
      * @param string|null $prefix
      * @return string
      */
-    public function implodeRecursive(array $data, $prefix = null)
+    public function implodeRecursive(array $data, $prefix = null): string
     {
         if ($prefix !== null && !is_string($prefix)) {
             throw new \InvalidArgumentException("Prefix must be string");

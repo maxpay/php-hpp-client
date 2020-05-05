@@ -19,7 +19,7 @@ interface ScrineyInterface
      * @throws GeneralMaxpayException
      * @return ButtonBuilder
      */
-    public function buildButton($userId);
+    public function buildButton(string $userId);
 
     /**
      * Method will return builder which allow to create and send rebill request
@@ -29,7 +29,7 @@ interface ScrineyInterface
      * @throws GeneralMaxpayException
      * @return RebillBuilder
      */
-    public function createRebillRequest($billToken, $userId);
+    public function createRebillRequest(string $billToken, string $userId);
 
     /**
      * @param string $transactionId
@@ -37,30 +37,24 @@ interface ScrineyInterface
      * @throws GeneralMaxpayException
      * @return mixed[]
      */
-    public function stopSubscription($transactionId, $userId);
+    public function stopSubscription(string $transactionId, string $userId);
 
     /**
      * @param string $transactionId
+     * @param float $amount Money amount to be refunded.
+     * @param string $currencyCode Transaction currency iso code.
      * @throws GeneralMaxpayException
      * @return mixed[]
      */
-    public function refund($transactionId);
+    public function refund(string $transactionId, float $amount, string $currencyCode);
 
     /**
      * Method for validate callback
      *
-     * @param array $data callback data from Maxpay
+     * @param string $data callback json string data from Maxpay.
+     * @param array $headers headers from response from Maxpay.
      * @throws GeneralMaxpayException
      * @return bool
      */
-    public function validateCallback(array $data);
-
-    /**
-     * Method for validate api result
-     *
-     * @param array $data result received from Maxpay API
-     * @throws GeneralMaxpayException
-     * @return bool
-     */
-    public function validateApiResult(array $data);
+    public function validateCallback(string $data, array $headers);
 }
