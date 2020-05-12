@@ -106,7 +106,7 @@ class Scriney implements ScrineyInterface
     }
 
     /**
-     * Method build integration code of pay button
+     * Method builds integration code of pay button
      *
      * @param string $userId User Id in your system
      * @throws GeneralMaxpayException
@@ -248,7 +248,7 @@ class Scriney implements ScrineyInterface
                 return false;
             }
 
-            if ($checkSum !== $signatureHelper->generate($callbackData, $this->identity->getPrivateKey())) {
+            if ($checkSum !== $signatureHelper->generateForArray($callbackData, $this->identity->getPrivateKey())) {
                 $this->logger->error(
                     'Checksum validation failure',
                     []
@@ -274,29 +274,16 @@ class Scriney implements ScrineyInterface
     }
     
     /**
-     * Method to validate callback
+     * Validate if callback data is valid.
      *
      * @param string $data Json data string.
      * @param array $headers Response headers.
      * @throws GeneralMaxpayException
      * @return bool
      */
-    public function validateCallback(string $data, array $headers)
-    {
-        return $this->validate($data, $headers);
-    }
-
-    /**
-     * Validate if callback data is valid.
-     * @param string $data Json data string.
-     * @param array $headers
-     * @throws GeneralMaxpayException
-     * @return bool
-     */
-    private function validate($data, $headers)
+    public function validateCallback(string $data, array $headers): bool
     {
         try {
-            
             $checkSum = $headers['X-Signature'] ?? null;
             $signatureHelper = new SignatureHelper();
 
@@ -308,7 +295,7 @@ class Scriney implements ScrineyInterface
                 return false;
             }
 
-            if ($checkSum !== $signatureHelper->generateCallbackChecksum($data, $this->identity->getPrivateKey())) {
+            if ($checkSum !== $signatureHelper->generateForString($data, $this->identity->getPrivateKey())) {
                 $this->logger->error(
                     'Checksum validation failure',
                     []
@@ -341,7 +328,7 @@ class Scriney implements ScrineyInterface
      * @throws GeneralMaxpayException
      * @return array
      */
-    public function cancelPostTrial($transactionId): array
+    public function cancelPostTrial(string $transactionId): array
     {
         try {
             $builder =  new CancelPostTrialBuilder(

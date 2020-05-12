@@ -53,10 +53,10 @@ class StopSubscriptionBuilder extends BaseBuilder
      */
     public function __construct(
         IdentityInterface $identity,
-        $userId,
-        $transactionId,
+        string $userId,
+        string $transactionId,
         LoggerInterface $logger,
-        $baseHost
+        string $baseHost
     ) {
         parent::__construct($logger);
 
@@ -76,7 +76,7 @@ class StopSubscriptionBuilder extends BaseBuilder
      * @return array
      * @throws GeneralMaxpayException
      */
-    public function send()
+    public function send(): array
     {
         $data = [
             'uniqueUserId' => $this->userId,
@@ -84,7 +84,7 @@ class StopSubscriptionBuilder extends BaseBuilder
             'publicKey' => $this->identity->getPublicKey()
         ];
 
-        $data['signature'] = $this->signatureHelper->generate(
+        $data['signature'] = $this->signatureHelper->generateForArray(
             $data,
             $this->identity->getPrivateKey(),
             true

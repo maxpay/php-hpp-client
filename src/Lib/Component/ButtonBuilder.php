@@ -61,7 +61,7 @@ class ButtonBuilder extends BaseBuilder
      * @param LoggerInterface $logger
      * @param string $baseHost
      */
-    public function __construct(IdentityInterface $identity, $userId, LoggerInterface $logger, $baseHost)
+    public function __construct(IdentityInterface $identity, string $userId, LoggerInterface $logger, string $baseHost)
     {
         parent::__construct($logger);
         $this->validator = new Validator();
@@ -79,7 +79,7 @@ class ButtonBuilder extends BaseBuilder
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */
-    public function setSuccessReturnUrl($successUrl)
+    public function setSuccessReturnUrl(string $successUrl): ButtonBuilder
     {
         try {
             $this->successUrl = $this->validator->validateString('successUrl', $successUrl);
@@ -104,7 +104,7 @@ class ButtonBuilder extends BaseBuilder
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */
-    public function setDeclineReturnUrl($declineUrl)
+    public function setDeclineReturnUrl(string $declineUrl): ButtonBuilder
     {
         try {
             $this->declineUrl = $this->validator->validateString('declineUrl', $declineUrl);
@@ -129,13 +129,8 @@ class ButtonBuilder extends BaseBuilder
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */
-    public function setShowButton($value)
+    public function setShowButton(bool $value): ButtonBuilder
     {
-        if (!is_bool($value)) {
-            $this->logger->error('Invalid `show button` value, bool expected');
-            throw new NotBooleanException('showButton');
-        }
-
         $this->showButton = $value;
         $this->logger->info('Field `showButton` successfully set');
         return $this;
@@ -148,12 +143,11 @@ class ButtonBuilder extends BaseBuilder
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */
-    public function setButtonText($buttonText)
+    public function setButtonText(string $buttonText): ButtonBuilder
     {
         try {
             $this->buttonText = $this->validator->validateString('buttonText', $buttonText);
             $this->logger->info('Field `buttonText` successfully set');
-            return $this;
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(
                 'Invalid button text',
@@ -164,6 +158,8 @@ class ButtonBuilder extends BaseBuilder
 
             throw $e;
         }
+        
+        return $this;
     }
 
     /**
@@ -173,7 +169,7 @@ class ButtonBuilder extends BaseBuilder
      * @throws GeneralMaxpayException
      * @return ButtonBuilder
      */
-    public function setCustomProducts(array $products)
+    public function setCustomProducts(array $products): ButtonBuilder
     {
         foreach ($products as $product) {
             if (!$product instanceof ProductInterface) {
@@ -189,7 +185,7 @@ class ButtonBuilder extends BaseBuilder
     }
 
     /** @return RenderableInterface */
-    public function buildPopup()
+    public function buildPopup(): RenderableInterface
     {
         return $this->build(new PopupButton($this->baseHost));
     }
@@ -200,7 +196,7 @@ class ButtonBuilder extends BaseBuilder
      * @throws GeneralMaxpayException
      * @return RenderableInterface
      */
-    public function buildFrame($height = 'auto', $width = 'auto')
+    public function buildFrame(string $height = 'auto', string $width = 'auto'): RenderableInterface
     {
         return $this->build(
             new FrameButton(
@@ -212,17 +208,16 @@ class ButtonBuilder extends BaseBuilder
     }
 
     /** @return RenderableInterface */
-    public function buildDirectForm()
+    public function buildDirectForm(): RenderableInterface
     {
         return $this->build(new DirectButton($this->baseHost));
     }
 
     /**
      * @param BaseButton $button
-     * @internal param string $type
      * @return RenderableInterface
      */
-    private function build(BaseButton $button)
+    private function build(BaseButton $button): RenderableInterface
     {
         $button->setKey($this->identity->getPrivateKey());
         $button->pushValue('key', $this->identity->getPublicKey());

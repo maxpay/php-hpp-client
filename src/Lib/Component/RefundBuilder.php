@@ -50,9 +50,9 @@ class RefundBuilder extends BaseBuilder
      */
     public function __construct(
         IdentityInterface $identity,
-        $transactionId,
+        string $transactionId,
         LoggerInterface $logger,
-        $baseHost
+        string $baseHost
     ) {
         parent::__construct($logger);
 
@@ -83,7 +83,7 @@ class RefundBuilder extends BaseBuilder
             'currency' => $currencyCode,
         ];
 
-        $data['signature'] = $this->signatureHelper->generate(
+        $data['signature'] = $this->signatureHelper->generateForArray(
             $data,
             $this->identity->getPrivateKey(),
             true
