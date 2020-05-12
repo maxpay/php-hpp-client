@@ -19,7 +19,7 @@ interface ScrineyInterface
      * @throws GeneralMaxpayException
      * @return ButtonBuilder
      */
-    public function buildButton(string $userId);
+    public function buildButton(string $userId): ButtonBuilder;
 
     /**
      * Method will return builder which allow to create and send rebill request
@@ -29,24 +29,24 @@ interface ScrineyInterface
      * @throws GeneralMaxpayException
      * @return RebillBuilder
      */
-    public function createRebillRequest(string $billToken, string $userId);
+    public function createRebillRequest(string $billToken, string $userId): RebillBuilder;
 
     /**
      * @param string $transactionId
      * @param string $userId
      * @throws GeneralMaxpayException
-     * @return mixed[]
+     * @return array
      */
-    public function stopSubscription(string $transactionId, string $userId);
+    public function stopSubscription(string $transactionId, string $userId): array;
 
     /**
      * @param string $transactionId
      * @param float $amount Money amount to be refunded.
      * @param string $currencyCode Transaction currency iso code.
      * @throws GeneralMaxpayException
-     * @return mixed[]
+     * @return array
      */
-    public function refund(string $transactionId, float $amount, string $currencyCode);
+    public function refund(string $transactionId, float $amount, string $currencyCode): array;
 
     /**
      * Method for validate callback
@@ -56,5 +56,5 @@ interface ScrineyInterface
      * @throws GeneralMaxpayException
      * @return bool
      */
-    public function validateCallback(string $data, array $headers);
+    public function validateCallback(string $data, array $headers): bool;
 }

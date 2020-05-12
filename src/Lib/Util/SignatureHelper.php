@@ -2,6 +2,8 @@
 
 namespace Maxpay\Lib\Util;
 
+use Maxpay\Lib\Exception\EmptyArgumentException;
+
 /**
  * Class SignatureHelper
  * @package Maxpay\Lib\Util
@@ -16,16 +18,13 @@ class SignatureHelper
      * @param bool $inLowercase
      * @return string
      */
-    public function generateCallbackChecksum(string $data, string $secret, bool $inLowercase = false): string
+    public function generateForString(string $data, string $secret, bool $inLowercase = false): string
     {
         if (empty($data)) {
-            throw new \InvalidArgumentException('Data argument cant be empty');
+            throw new EmptyArgumentException('Data argument cant be empty');
         }
-        if (!is_string($secret)) {
-            throw new \InvalidArgumentException('Secret must be string');
-        }
-        if (!is_bool($inLowercase)) {
-            throw new \InvalidArgumentException('inLowercase must be boolean');
+        if (empty($secret)) {
+            throw new EmptyArgumentException('Secret key cant be empty');
         }
 
         $signature = $data . $secret;
@@ -40,26 +39,23 @@ class SignatureHelper
      /**
      * Generates signature with sha256 algorithm.
      *
-     * @param array $mixed
+     * @param array $data
      * @param string $secret
      * @param bool $inLowercase
      * @return string
      */
-    public function generate(array $mixed, string $secret, bool $inLowercase = false): string
+    public function generateForArray(array $data, string $secret, bool $inLowercase = false): string
     {
-        if (count($mixed) < 1) {
-            throw new \InvalidArgumentException('Data argument cant be empty');
+        if (count($data) < 1) {
+            throw new EmptyArgumentException('Data argument cant be empty');
         } else {
-            $this->checkRecursive($mixed);
+            $this->checkRecursive($data);
         }
-        if (!is_string($secret)) {
-            throw new \InvalidArgumentException('Secret must be string');
-        }
-        if (!is_bool($inLowercase)) {
-            throw new \InvalidArgumentException('inLowercase must be boolean');
+        if (empty($secret)) {
+            throw new EmptyArgumentException('Secret key cant be empty');
         }
 
-        $signature = $this->implodeRecursive($mixed);
+        $signature = $this->implodeRecursive($data);
         $signature .= $secret;
 
         if ($inLowercase) {
@@ -95,12 +91,8 @@ class SignatureHelper
      * @param string|null $prefix
      * @return string
      */
-    public function implodeRecursive(array $data, $prefix = null): string
+    public function implodeRecursive(array $data, string $prefix = null): string
     {
-        if ($prefix !== null && !is_string($prefix)) {
-            throw new \InvalidArgumentException("Prefix must be string");
-        }
-
         $out = "";
         ksort($data);
 

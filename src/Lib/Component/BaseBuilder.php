@@ -43,9 +43,9 @@ abstract class BaseBuilder
      * Set up user information
      *
      * @param UserInfoInterface $userInfo
-     * @return static
+     * @return BaseBuilder
      */
-    public function setUserInfo(UserInfoInterface $userInfo)
+    public function setUserInfo(UserInfoInterface $userInfo): BaseBuilder
     {
         $this->userInfo = $userInfo;
         $this->logger->info('Field `userInfo` successfully set');
@@ -57,10 +57,10 @@ abstract class BaseBuilder
      * e.g. ['custom_some_param' => 'some value']
      *
      * @param array $params
-     * @return static
+     * @return BaseBuilder
      * @throws GeneralMaxpayException
      */
-    public function setCustomParams(array $params)
+    public function setCustomParams(array $params): BaseBuilder
     {
         if (count($params) === 0) {
             throw new EmptyArgumentException('customParams');
@@ -84,10 +84,10 @@ abstract class BaseBuilder
      * Setup a product that exists in Merchant Portal
      *
      * @param string $productId
-     * @return static
+     * @return BaseBuilder
      * @throws GeneralMaxpayException
      */
-    public function setProductId($productId)
+    public function setProductId(string $productId): BaseBuilder
     {
         try {
             $this->productId = $this->validator->validateString('productId', $productId);
@@ -110,9 +110,9 @@ abstract class BaseBuilder
      * @return array
      * @throws GeneralMaxpayException
      */
-    public function prepareAnswer($response)
+    public function prepareAnswer(array $response): array
     {
-        if (!is_array($response) || !isset($response['requestSuccess'])) {
+        if (!isset($response['requestSuccess'])) {
             $e = new GeneralMaxpayException('Invalid response format');
             $this->logger->error(
                 $e->getMessage(),

@@ -20,7 +20,7 @@ interface ValidatorInterface
      * @throws GeneralMaxpayException
      * @return string
      */
-    public function validateString($paramName, $value, $minLength = 1, $maxLength = null);
+    public function validateString(string $paramName, string $value, int $minLength = 1, int $maxLength = null): string;
 
     /**
      * @param string $paramName
@@ -28,8 +28,8 @@ interface ValidatorInterface
      * @throws GeneralMaxpayException
      * @return float|int
      */
-    public function validateNumeric($paramName, $value);
+    public function validateNumeric(string $paramName, $value);
 
     /** @return string */
-    public function getDefaultEncoding();
+    public function getDefaultEncoding(): string;
 }

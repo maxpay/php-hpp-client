@@ -9,5 +9,5 @@ namespace Maxpay\Lib\Model;
 interface ProductInterface
 {
     /** @return array */
-    public function toHashMap();
+    public function toHashMap(): array;
 }

@@ -51,10 +51,10 @@ class RebillBuilder extends BaseBuilder
      * @param IdentityInterface $identity
      * @param string $billToken
      * @param string $userId
-     * @param string $baseHost
      * @param LoggerInterface $logger
+     * @param string $baseHost
      */
-    public function __construct(IdentityInterface $identity, $billToken, $userId, LoggerInterface $logger, $baseHost)
+    public function __construct(IdentityInterface $identity, string $billToken, string $userId, LoggerInterface $logger, string $baseHost)
     {
         parent::__construct($logger);
         $this->validator = new Validator();
@@ -75,7 +75,7 @@ class RebillBuilder extends BaseBuilder
      * @param ProductInterface $product
      * @return RebillBuilder
      */
-    public function setCustomProduct(ProductInterface $product)
+    public function setCustomProduct(ProductInterface $product): RebillBuilder
     {
         $this->customProduct = $product;
         $this->logger->info('Custom product successfully set');
@@ -85,9 +85,9 @@ class RebillBuilder extends BaseBuilder
 
     /**
      * @throws GeneralMaxpayException
-     * @return mixed[]
+     * @return array
      */
-    public function send()
+    public function send(): array
     {
         $preparedData = [
             'publicKey' => $this->identity->getPublicKey(),
@@ -113,7 +113,7 @@ class RebillBuilder extends BaseBuilder
             $preparedData = array_merge($preparedData, $this->customProduct->toHashMap());
         }
 
-        $preparedData['signature'] = $this->signatureHelper->generate(
+        $preparedData['signature'] = $this->signatureHelper->generateForArray(
             $preparedData,
             $this->identity->getPrivateKey(),
             true

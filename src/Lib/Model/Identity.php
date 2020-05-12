@@ -18,11 +18,11 @@ class Identity implements IdentityInterface
     private $privateKey;
 
     /**
-     * @param $publicKey
-     * @param $privateKey
+     * @param string $publicKey
+     * @param string $privateKey
      * @throws GeneralMaxpayException
      */
-    public function __construct($publicKey, $privateKey)
+    public function __construct(string $publicKey, string $privateKey)
     {
         $validator = new Validator();
         $this->publicKey = $validator->validateString('publicKey', $publicKey);
@@ -30,13 +30,13 @@ class Identity implements IdentityInterface
     }
 
     /** @return string */
-    public function getPublicKey()
+    public function getPublicKey(): string
     {
         return $this->publicKey;
     }
 
     /** @return string */
-    public function getPrivateKey()
+    public function getPrivateKey(): string
     {
         return $this->privateKey;
     }

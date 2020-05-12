@@ -30,23 +30,24 @@ abstract class BaseButton implements RenderableInterface
      * @param string $name
      * @param mixed $value
      */
-    public function pushValue($name, $value)
+    public function pushValue(string $name, $value): void
     {
         $this->unsafeFieldList[$name] = $value;
     }
 
     /** @param string $key */
-    public function setKey($key)
+    public function setKey(string $key): void
     {
         $this->key = $key;
     }
 
-    private function setSignature()
+    /** @return void */
+    private function setSignature(): void
     {
         $signatureHelper = new SignatureHelper();
         $this->pushValue(
             'signature',
-            $signatureHelper->generate(
+            $signatureHelper->generateForArray(
                 $this->unsafeFieldList,
                 $this->key,
                 true
@@ -55,10 +56,10 @@ abstract class BaseButton implements RenderableInterface
     }
 
     /** @return void */
-    abstract public function build();
+    abstract public function build(): void;
 
     /** @return string */
-    public function asString()
+    public function asString(): string
     {
         $this->setSignature();
         $stringHelper = new StringHelper();
@@ -72,13 +73,13 @@ abstract class BaseButton implements RenderableInterface
     }
 
     /** @return void */
-    public function display()
+    public function display(): void
     {
         echo $this->asString();
     }
 
     /** @return string */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->asString();
     }

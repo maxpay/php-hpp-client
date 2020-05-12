@@ -67,14 +67,14 @@ class CancelPostTrialBuilder extends BaseBuilder
      * @return array
      * @throws GeneralMaxpayException
      */
-    public function send()
+    public function send(): array
     {
         $data = [
             'transactionId' => $this->transactionId,
             'publicKey' => $this->identity->getPublicKey()
         ];
 
-        $data['signature'] = $this->signatureHelper->generate(
+        $data['signature'] = $this->signatureHelper->generateForArray(
             $data,
             $this->identity->getPrivateKey(),
             true

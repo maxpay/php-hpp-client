@@ -92,21 +92,21 @@ class BaseProduct implements ProductInterface
      * @throws GeneralMaxpayException
      */
     public function __construct(
-        $type,
-        $productId,
-        $productName,
-        $currency,
+        string $type,
+        string $productId,
+        string $productName,
+        string $currency,
         $amount,
         $discount = null,
-        $discountType = null,
-        $productDescription = null,
-        $subscriptionLength = null,
-        $subscriptionPeriod = null,
-        $subscriptionBillingCycles = null,
+        string $discountType = null,
+        string $productDescription = null,
+        int $subscriptionLength = null,
+        string $subscriptionPeriod = null,
+        int $subscriptionBillingCycles = null,
         $subscriptionEndDate = null,
-        $postTrialProductId = null,
-        $postTrialLength = null,
-        $postTrialPeriod = null
+        string $postTrialProductId = null,
+        int $postTrialLength = null,
+        string $postTrialPeriod = null
     ) {
         $validator = new Validator();
         $type = $validator->validateString('productType', $type);
@@ -173,7 +173,7 @@ class BaseProduct implements ProductInterface
     }
 
     /** @return array */
-    public function toHashMap()
+    public function toHashMap(): array
     {
         $result = [
             'productType' => $this->type,

@@ -16,13 +16,12 @@ class StringHelper
      * @throws GeneralMaxpayException
      * @return string
      */
-    public function encodeHtmlAttribute($string)
+    public function encodeHtmlAttribute(string $string): string
     {
-        //This function copied from TWIG
-        if (!is_string($string)) {
-            throw new NotStringException('string');
+        if (empty($string)) {
+            throw new \InvalidArgumentException('String argument cant be empty');
         }
-        if (0 == strlen($string) ? false : (1 == preg_match('/^./su', $string) ? false : true)) {
+        if (1 == preg_match('/^./su', $string) ? false : true) {
             throw new NotStringException('string');
         }
 
@@ -49,8 +48,6 @@ class StringHelper
                     $hex = strtoupper(substr('0000'.bin2hex($chr), -4));
                 }
                 $int = hexdec($hex);
-
-
 
                 if (array_key_exists($int, $entityMap)) {
                     return sprintf('&%s;', $entityMap[$int]);

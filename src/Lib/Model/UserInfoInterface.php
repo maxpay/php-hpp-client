@@ -9,5 +9,5 @@ namespace Maxpay\Lib\Model;
 interface UserInfoInterface
 {
     /** @return array */
-    public function toHashMap();
+    public function toHashMap(): array;
 }

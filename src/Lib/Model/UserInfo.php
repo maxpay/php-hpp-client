@@ -83,7 +83,7 @@ class UserInfo implements UserInfoInterface
 
 
     /** @return array */
-    public function toHashMap()
+    public function toHashMap(): array
     {
         $result = [
             'email' => $this->email,
