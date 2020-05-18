@@ -17,7 +17,7 @@ class PopupButton extends BaseButton
     /** @var string */
     private $baseHost;
 
-    public function __construct($baseHost)
+    public function __construct(string $baseHost)
     {
         $this->baseHost = $baseHost;
         $this->pushValue('type', 'popup');

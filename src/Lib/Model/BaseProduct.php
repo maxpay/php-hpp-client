@@ -78,14 +78,14 @@ class BaseProduct implements ProductInterface
      * @param string $productId
      * @param string $productName
      * @param string $currency
-     * @param int|float $amount
-     * @param int|float|null $discount
+     * @param float $amount
+     * @param float $discount
      * @param string|null $discountType
      * @param string|null $productDescription
      * @param int|null $subscriptionLength
      * @param string|null $subscriptionPeriod
      * @param int|null $subscriptionBillingCycles
-     * @param float|null $subscriptionEndDate
+     * @param float $subscriptionEndDate
      * @param string|null $postTrialProductId
      * @param int|null $postTrialLength
      * @param string|null $postTrialPeriod
@@ -96,14 +96,14 @@ class BaseProduct implements ProductInterface
         string $productId,
         string $productName,
         string $currency,
-        $amount,
-        $discount = null,
+        float $amount,
+        float $discount = null,
         string $discountType = null,
         string $productDescription = null,
         int $subscriptionLength = null,
         string $subscriptionPeriod = null,
         int $subscriptionBillingCycles = null,
-        $subscriptionEndDate = null,
+        float $subscriptionEndDate = null,
         string $postTrialProductId = null,
         int $postTrialLength = null,
         string $postTrialPeriod = null

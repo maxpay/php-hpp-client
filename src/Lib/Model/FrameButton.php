@@ -22,7 +22,7 @@ class FrameButton extends BaseButton
      * @param string $width
      * @param string $baseHost
      */
-    public function __construct($height, $width, $baseHost)
+    public function __construct(string $height, string $width, string $baseHost)
     {
         $this->baseHost = $baseHost;
         $this->pushValue('type', 'integrated');

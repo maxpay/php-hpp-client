@@ -47,9 +47,9 @@ class CancelPostTrialBuilder extends BaseBuilder
      */
     public function __construct(
         IdentityInterface $identity,
-        $transactionId,
+        string $transactionId,
         LoggerInterface $logger,
-        $baseHost
+        string $baseHost
     ) {
         parent::__construct($logger);
 
