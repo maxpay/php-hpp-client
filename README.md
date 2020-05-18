@@ -2,7 +2,7 @@ You can sign up for a maxpay account at https://my.maxpay.com/
 
 # Requirements
 
-PHP 7.0 and later.
+PHP 7.1 and later.
 
 # Composer
 
