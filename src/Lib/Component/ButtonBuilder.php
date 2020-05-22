@@ -38,7 +38,7 @@ class ButtonBuilder extends BaseBuilder
     /** @var string */
     private $buttonText = 'Pay';
 
-    /** @var productInterface[] */
+    /** @var ProductInterface[] */
     private $customProducts = [];
 
     /** @var string */

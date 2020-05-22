@@ -12,6 +12,6 @@ class GeneralMaxpayException extends \Exception
 {
     public function __construct(string $message = "", \Exception $previous = null, int $code = 0)
     {
-        \Exception::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous);
     }
 }

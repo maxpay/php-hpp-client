@@ -22,7 +22,8 @@
         "ext-curl": "*"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "1.5.3"
+        "squizlabs/php_codesniffer": "1.5.3",
+        "phpstan/phpstan": "0.8.5"
     },
     "autoload": {
         "psr-4": { "Maxpay\\" : "src/" }

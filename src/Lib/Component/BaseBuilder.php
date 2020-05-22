@@ -74,8 +74,9 @@ abstract class BaseBuilder
                 $this->logger->error('Custom param name must start with prefix - ' . self::CUSTOM_PARAM_PREFIX);
                 throw new GeneralMaxpayException('Invalid custom param key');
             }
-            $this->customParams[$this->validator->validateString('customParamName',
-                $paramName)] = $this->validator->validateString('customParamValue', $paramValue);
+            $this->customParams[
+                $this->validator->validateString('customParamName', $paramName)
+            ] = $this->validator->validateString('customParamValue', $paramValue);
         }
 
         $this->logger->info('Field `customParams` successfully set');
