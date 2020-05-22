@@ -54,8 +54,13 @@ class RebillBuilder extends BaseBuilder
      * @param LoggerInterface $logger
      * @param string $baseHost
      */
-    public function __construct(IdentityInterface $identity, string $billToken, string $userId, LoggerInterface $logger, string $baseHost)
-    {
+    public function __construct(
+        IdentityInterface $identity,
+        string $billToken,
+        string $userId,
+        LoggerInterface $logger,
+        string $baseHost
+    ) {
         parent::__construct($logger);
         $this->validator = new Validator();
         $this->identity = $identity;
@@ -63,7 +68,7 @@ class RebillBuilder extends BaseBuilder
         $this->baseHost = $this->validator->validateString('baseHost', $baseHost);
         $this->billToken = $this->validator->validateString('billToken', $billToken);
         $this->userId = $this->validator->validateString('userId', $userId);
-        $this->signatureHelper  = new SignatureHelper();
+        $this->signatureHelper = new SignatureHelper();
         $this->client = new CurlClient($this->baseHost . $this->action, $logger);
 
         $this->logger->info('Rebill builder successfully initialized');
@@ -84,8 +89,8 @@ class RebillBuilder extends BaseBuilder
     }
 
     /**
-     * @throws GeneralMaxpayException
      * @return array
+     * @throws GeneralMaxpayException
      */
     public function send(): array
     {

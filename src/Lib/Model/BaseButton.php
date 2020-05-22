@@ -35,13 +35,17 @@ abstract class BaseButton implements RenderableInterface
         $this->unsafeFieldList[$name] = $value;
     }
 
-    /** @param string $key */
+    /**
+     * @param string $key
+     */
     public function setKey(string $key): void
     {
         $this->key = $key;
     }
 
-    /** @return void */
+    /**
+     * @return void
+     */
     private function setSignature(): void
     {
         $signatureHelper = new SignatureHelper();
@@ -55,30 +59,37 @@ abstract class BaseButton implements RenderableInterface
         );
     }
 
-    /** @return void */
+    /**
+     * @return void
+     */
     abstract public function build(): void;
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function asString(): string
     {
         $this->setSignature();
         $stringHelper = new StringHelper();
         foreach ($this->unsafeFieldList as $k => $v) {
-            $this->fieldList[
-                $stringHelper->encodeHtmlAttribute($k)
-            ] = $stringHelper->encodeHtmlAttribute($v);
+            $this->fieldList[$stringHelper->encodeHtmlAttribute($k)] = $stringHelper->encodeHtmlAttribute($v);
         }
         $this->build();
+
         return $this->buttonCode;
     }
 
-    /** @return void */
+    /**
+     * @return void
+     */
     public function display(): void
     {
         echo $this->asString();
     }
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->asString();

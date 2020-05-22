@@ -21,8 +21,8 @@ class Validator implements ValidatorInterface
      * @param string $value
      * @param int $minLength
      * @param int|null $maxLength
-     * @throws GeneralMaxpayException
      * @return string
+     * @throws GeneralMaxpayException
      */
     public function validateString(string $paramName, string $value, int $minLength = 1, int $maxLength = null): string
     {
@@ -30,7 +30,7 @@ class Validator implements ValidatorInterface
             throw new EmptyArgumentException($paramName);
         }
         if (!is_null($maxLength)) {
-            if (mb_strlen($value, $this->encoding) > $maxLength ||  mb_strlen($value, $this->encoding) < $minLength) {
+            if (mb_strlen($value, $this->encoding) > $maxLength || mb_strlen($value, $this->encoding) < $minLength) {
                 throw new InvalidStringLengthException($paramName, $minLength, $maxLength);
             }
         }
@@ -41,8 +41,8 @@ class Validator implements ValidatorInterface
     /**
      * @param string $paramName
      * @param float|int $value
-     * @throws GeneralMaxpayException
      * @return float|int
+     * @throws GeneralMaxpayException
      */
     public function validateNumeric(string $paramName, $value)
     {
@@ -56,7 +56,9 @@ class Validator implements ValidatorInterface
         return $value;
     }
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function getDefaultEncoding(): string
     {
         return $this->encoding;

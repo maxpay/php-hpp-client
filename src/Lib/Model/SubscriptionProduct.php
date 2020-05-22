@@ -14,7 +14,7 @@ class SubscriptionProduct extends BaseProduct
      * @param float $amount
      * @param string $currency
      * @param int $subscriptionLength
-     * @param string $subscriptionPeriod  Allowed types - 24H, 7D, 30D, 365D
+     * @param string $subscriptionPeriod Allowed types - 24H, 7D, 30D, 365D
      * @param int|null $subscriptionBillingCycles
      * @param float|null $subscriptionEndDate
      * @param float|null $discount
@@ -33,7 +33,7 @@ class SubscriptionProduct extends BaseProduct
         float $subscriptionEndDate = null,
         float $discount = null,
         string $discountType = null,
-        string  $productDescription = null
+        string $productDescription = null
     ) {
         parent::__construct(
             self::TYPE_SUBSCRIPTION,

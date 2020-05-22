@@ -17,19 +17,21 @@ interface ValidatorInterface
      * @param string $value
      * @param int $minLength
      * @param int|null $maxLength
-     * @throws GeneralMaxpayException
      * @return string
+     * @throws GeneralMaxpayException
      */
     public function validateString(string $paramName, string $value, int $minLength = 1, int $maxLength = null): string;
 
     /**
      * @param string $paramName
      * @param float|int $value
-     * @throws GeneralMaxpayException
      * @return float|int
+     * @throws GeneralMaxpayException
      */
     public function validateNumeric(string $paramName, $value);
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function getDefaultEncoding(): string;
 }

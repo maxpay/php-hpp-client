@@ -57,7 +57,7 @@ class CancelPostTrialBuilder extends BaseBuilder
         $this->identity = $identity;
         $this->transactionId = $this->validator->validateString('transactionId', $transactionId);
         $this->baseHost = $this->validator->validateString('baseHost', $baseHost);
-        $this->signatureHelper  = new SignatureHelper();
+        $this->signatureHelper = new SignatureHelper();
 
         $this->client = new CurlClient($baseHost . $this->action, $logger);
         $logger->info('Cancel post trial builder successfully initialized');

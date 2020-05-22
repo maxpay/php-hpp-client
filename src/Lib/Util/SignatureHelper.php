@@ -29,14 +29,10 @@ class SignatureHelper
 
         $signature = $data . $secret;
 
-        if ($inLowercase) {
-            $signature = mb_strtolower($signature);
-        }
-
-        return hash('sha256', $signature);
+        return $this->optionalToLowerString($this->hashString($signature), $inLowercase);
     }
-    
-     /**
+
+    /**
      * Generates signature with sha256 algorithm.
      *
      * @param array $data
@@ -58,11 +54,17 @@ class SignatureHelper
         $signature = $this->implodeRecursive($data);
         $signature .= $secret;
 
-        if ($inLowercase) {
-            $signature = mb_strtolower($signature);
-        }
+        return $this->optionalToLowerString($this->hashString($signature), $inLowercase);
+    }
 
-        return hash('sha256', $signature);
+    private function optionalToLowerString(string $string, bool $toLower): string
+    {
+        return $toLower ? mb_strtolower($string) : $string;
+    }
+
+    private function hashString(string $string): string
+    {
+        return hash('sha256', $string);
     }
 
     /**

@@ -8,7 +8,9 @@ namespace Maxpay\Lib\Exception;
  */
 class InvalidEncodingException extends GeneralMaxpayException
 {
-    /** @param string $paramName */
+    /**
+     * @param string $paramName
+     */
     public function __construct(string $paramName)
     {
         parent::__construct(

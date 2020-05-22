@@ -62,17 +62,16 @@ class RefundBuilder extends BaseBuilder
         $this->transactionId = $this->validator->validateString('transactionId', $transactionId);
         $this->baseHost = $baseHost;
         $this->client = new CurlClient($this->baseHost . $this->action, $logger);
-        $this->signatureHelper  = new SignatureHelper();
+        $this->signatureHelper = new SignatureHelper();
 
         $this->logger->info('Refund builder successfully initialized');
     }
 
     /**
-     * @return array
      * @param float $amount
      * @param string $currencyCode
-     * @throws GeneralMaxpayException
      * @return array
+     * @throws GeneralMaxpayException
      */
     public function send(float $amount, string $currencyCode): array
     {

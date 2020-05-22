@@ -13,8 +13,8 @@ class StringHelper
 {
     /**
      * @param string $string
-     * @throws GeneralMaxpayException
      * @return string
+     * @throws GeneralMaxpayException
      */
     public function encodeHtmlAttribute(string $string): string
     {
@@ -28,12 +28,12 @@ class StringHelper
         $string = preg_replace_callback(
             '#[^a-zA-Z0-9,\.\-_]#Su',
             function ($matches) {
-                $entityMap = array(
+                $entityMap = [
                     34 => 'quot',
                     38 => 'amp',
                     60 => 'lt',
                     62 => 'gt',
-                );
+                ];
                 $chr = $matches[0];
                 $ord = ord($chr);
 
@@ -42,10 +42,10 @@ class StringHelper
                 }
 
                 if (strlen($chr) == 1) {
-                    $hex = strtoupper(substr('00'.bin2hex($chr), -2));
+                    $hex = strtoupper(substr('00' . bin2hex($chr), -2));
                 } else {
                     $chr = mb_convert_encoding($chr, 'UTF-16BE', 'UTF-8');
-                    $hex = strtoupper(substr('0000'.bin2hex($chr), -4));
+                    $hex = strtoupper(substr('0000' . bin2hex($chr), -4));
                 }
                 $int = hexdec($hex);
 

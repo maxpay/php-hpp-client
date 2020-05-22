@@ -29,13 +29,17 @@ class Identity implements IdentityInterface
         $this->privateKey = $validator->validateString('privateKey', $privateKey);
     }
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function getPublicKey(): string
     {
         return $this->publicKey;
     }
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function getPrivateKey(): string
     {
         return $this->privateKey;

@@ -36,8 +36,8 @@ class CurlClient implements ClientInterface
 
     /**
      * @param mixed[] $data
-     * @throws GeneralMaxpayException
      * @return mixed[]
+     * @throws GeneralMaxpayException
      */
     public function send(array $data)
     {
@@ -52,8 +52,8 @@ class CurlClient implements ClientInterface
         $result = curl_exec($curl);
 
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $errno  = curl_errno($curl);
-        $error  = curl_error($curl);
+        $errno = curl_errno($curl);
+        $error = curl_error($curl);
         curl_close($curl);
 
         $this->logger->info(
@@ -133,7 +133,7 @@ class CurlClient implements ClientInterface
     {
         $stringAnswer = $this->validator->validateString('answer', $stringAnswer);
 
-        $data  = json_decode($stringAnswer, true);
+        $data = json_decode($stringAnswer, true);
         if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
             $message = 'JSON unserialization error';
             if (function_exists('json_last_error_msg')) {

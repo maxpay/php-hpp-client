@@ -67,7 +67,7 @@ class StopSubscriptionBuilder extends BaseBuilder
         $this->transactionId = $this->validator->validateString('transactionId', $transactionId);
         $this->baseHost = $baseHost;
         $this->client = new CurlClient($this->baseHost . $this->action, $logger);
-        $this->signatureHelper  = new SignatureHelper();
+        $this->signatureHelper = new SignatureHelper();
 
         $this->logger->info('Stop subscription builder successfully initialized');
     }

@@ -8,9 +8,13 @@ namespace Maxpay\Lib\Model;
  */
 interface RenderableInterface
 {
-    /** @return string */
+    /**
+     * @return string
+     */
     public function asString(): string;
 
-    /** @return void */
+    /**
+     * @return void
+     */
     public function display(): void;
 }

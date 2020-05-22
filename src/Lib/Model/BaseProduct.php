@@ -18,14 +18,14 @@ class BaseProduct implements ProductInterface
     const DISCOUNT_AMOUNT = 'amountOff';
     const DISCOUNT_PERCENT = 'percentOff';
 
-    const SUBSCRIPTION_24H   = '24H';
-    const SUBSCRIPTION_7D    = '7D';
-    const SUBSCRIPTION_30D   = '30D';
-    const SUBSCRIPTION_365D  = '365D';
+    const SUBSCRIPTION_24H = '24H';
+    const SUBSCRIPTION_7D = '7D';
+    const SUBSCRIPTION_30D = '30D';
+    const SUBSCRIPTION_365D = '365D';
 
-    const TRIAL_24H  = '24H';
-    const TRIAL_7D   = '7D';
-    const TRIAL_30D  = '30D';
+    const TRIAL_24H = '24H';
+    const TRIAL_7D = '7D';
+    const TRIAL_30D = '30D';
     const TRIAL_365D = '365D';
 
     /** @var string */
@@ -64,13 +64,13 @@ class BaseProduct implements ProductInterface
     /** @var int|null */
     private $subscriptionBillingCycles;
 
-    /** @var string|null  */
+    /** @var string|null */
     private $postTrialProductId;
 
-    /** @var int|null  */
+    /** @var int|null */
     private $postTrialLength;
 
-    /** @var string|null  */
+    /** @var string|null */
     private $postTrialPeriod;
 
     /**
@@ -150,15 +150,13 @@ class BaseProduct implements ProductInterface
             }
 
             $this->subscriptionPeriod = $subscriptionPeriod;
-
             $this->subscriptionBillingCycles = is_null($subscriptionBillingCycles) ?
-            null :
-            $validator->validateNumeric('subscriptionBillingCycles', $subscriptionBillingCycles);
-
+                null :
+                $validator->validateNumeric('subscriptionBillingCycles', $subscriptionBillingCycles);
 
             $this->subscriptionEndDate = is_null($subscriptionEndDate) ?
-            null :
-            $validator->validateNumeric('subscriptionEndDate', $subscriptionEndDate);
+                null :
+                $validator->validateNumeric('subscriptionEndDate', $subscriptionEndDate);
         }
 
         if (!is_null($postTrialProductId) && $this->type === self::TYPE_TRIAL) {
@@ -172,7 +170,9 @@ class BaseProduct implements ProductInterface
         }
     }
 
-    /** @return array */
+    /**
+     * @return array
+     */
     public function toHashMap(): array
     {
         $result = [

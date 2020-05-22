@@ -20,7 +20,6 @@ use Psr\Log\NullLogger;
  */
 class Scriney implements ScrineyInterface
 {
-
     /** @var string */
     private $hostBase;
 
@@ -77,8 +76,8 @@ class Scriney implements ScrineyInterface
     /**
      * @param string $billToken
      * @param string $userId
-     * @throws GeneralMaxpayException
      * @return RebillBuilder
+     * @throws GeneralMaxpayException
      */
     public function createRebillRequest(string $billToken, string $userId): RebillBuilder
     {
@@ -109,8 +108,8 @@ class Scriney implements ScrineyInterface
      * Method builds integration code of pay button
      *
      * @param string $userId User Id in your system
-     * @throws GeneralMaxpayException
      * @return ButtonBuilder
+     * @throws GeneralMaxpayException
      */
     public function buildButton(string $userId): ButtonBuilder
     {
@@ -142,13 +141,13 @@ class Scriney implements ScrineyInterface
      *
      * @param string $transactionId
      * @param string $userId
-     * @throws GeneralMaxpayException
      * @return array
+     * @throws GeneralMaxpayException
      */
     public function stopSubscription(string $transactionId, string $userId): array
     {
         try {
-            $subscriptionBuilder =  new StopSubscriptionBuilder(
+            $subscriptionBuilder = new StopSubscriptionBuilder(
                 $this->identity,
                 $userId,
                 $transactionId,
@@ -184,13 +183,13 @@ class Scriney implements ScrineyInterface
      * @param string $transactionId
      * @param float $amount Money amount to be refunded.
      * @param string $currencyCode Transaction currency iso code.
-     * @throws GeneralMaxpayException
      * @return array
+     * @throws GeneralMaxpayException
      */
     public function refund(string $transactionId, float $amount, string $currencyCode): array
     {
         try {
-            $refundBuilder =  new RefundBuilder(
+            $refundBuilder = new RefundBuilder(
                 $this->identity,
                 $transactionId,
                 $this->logger,
@@ -223,8 +222,8 @@ class Scriney implements ScrineyInterface
      * Method for validate api result
      *
      * @param array $data result received from Maxpay API
-     * @throws GeneralMaxpayException
      * @return bool
+     * @throws GeneralMaxpayException
      */
     public function validateApiResult(array $data): bool
     {
@@ -245,6 +244,7 @@ class Scriney implements ScrineyInterface
                     'checkSum field is required',
                     []
                 );
+
                 return false;
             }
 
@@ -253,6 +253,7 @@ class Scriney implements ScrineyInterface
                     'Checksum validation failure',
                     []
                 );
+
                 return false;
             }
 
@@ -260,6 +261,7 @@ class Scriney implements ScrineyInterface
                 'Checksum is valid',
                 []
             );
+
             return true;
         } catch (\Exception $ex) {
             $this->logger->error(
@@ -272,14 +274,14 @@ class Scriney implements ScrineyInterface
             throw new GeneralMaxpayException($ex->getMessage(), $ex);
         }
     }
-    
+
     /**
      * Validate if callback data is valid.
      *
      * @param string $data Json data string.
      * @param array $headers Response headers.
-     * @throws GeneralMaxpayException
      * @return bool
+     * @throws GeneralMaxpayException
      */
     public function validateCallback(string $data, array $headers): bool
     {
@@ -292,6 +294,7 @@ class Scriney implements ScrineyInterface
                     'Checksum attribute is required',
                     []
                 );
+
                 return false;
             }
 
@@ -300,6 +303,7 @@ class Scriney implements ScrineyInterface
                     'Checksum validation failure',
                     []
                 );
+
                 return false;
             }
 
@@ -307,7 +311,7 @@ class Scriney implements ScrineyInterface
                 'Checksum is valid',
                 []
             );
-            
+
             return true;
         } catch (\Exception $ex) {
             $this->logger->error(
@@ -325,13 +329,13 @@ class Scriney implements ScrineyInterface
      * Method cancel post trial
      *
      * @param string $transactionId
-     * @throws GeneralMaxpayException
      * @return array
+     * @throws GeneralMaxpayException
      */
     public function cancelPostTrial(string $transactionId): array
     {
         try {
-            $builder =  new CancelPostTrialBuilder(
+            $builder = new CancelPostTrialBuilder(
                 $this->identity,
                 $transactionId,
                 $this->logger,

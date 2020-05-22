@@ -24,12 +24,14 @@ class PopupButton extends BaseButton
         $this->pushValue('iframesrc', $this->baseHost . 'hpp');
     }
 
-    /** @return void */
+    /**
+     * @return void
+     */
     public function build(): void
     {
-        $body = "src='". $this->baseHost . $this->builderScriptName . ".js' ";
+        $body = "src='" . $this->baseHost . $this->builderScriptName . ".js' ";
         foreach ($this->fieldList as $key => $value) {
-            $body  .= "data-" . $key . "='" . $value . "' ";
+            $body .= "data-" . $key . "='" . $value . "' ";
         }
 
         $this->buttonCode = $this->codeStart . $body . $this->codeEnd;

@@ -81,8 +81,9 @@ class UserInfo implements UserInfoInterface
         }
     }
 
-
-    /** @return array */
+    /**
+     * @return array
+     */
     public function toHashMap(): array
     {
         $result = [

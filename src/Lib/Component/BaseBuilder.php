@@ -32,7 +32,9 @@ abstract class BaseBuilder
     /** @var ValidatorInterface */
     private $validator;
 
-    /** @param LoggerInterface $logger */
+    /**
+     * @param LoggerInterface $logger
+     */
     public function __construct(LoggerInterface $logger)
     {
         $this->validator = new Validator();
@@ -49,6 +51,7 @@ abstract class BaseBuilder
     {
         $this->userInfo = $userInfo;
         $this->logger->info('Field `userInfo` successfully set');
+
         return $this;
     }
 
@@ -71,12 +74,12 @@ abstract class BaseBuilder
                 $this->logger->error('Custom param name must start with prefix - ' . self::CUSTOM_PARAM_PREFIX);
                 throw new GeneralMaxpayException('Invalid custom param key');
             }
-            $this->customParams[
-                $this->validator->validateString('customParamName', $paramName)
-            ] = $this->validator->validateString('customParamValue', $paramValue);
+            $this->customParams[$this->validator->validateString('customParamName',
+                $paramName)] = $this->validator->validateString('customParamValue', $paramValue);
         }
 
         $this->logger->info('Field `customParams` successfully set');
+
         return $this;
     }
 
@@ -92,6 +95,7 @@ abstract class BaseBuilder
         try {
             $this->productId = $this->validator->validateString('productId', $productId);
             $this->logger->info('Field `productId` successfully set');
+
             return $this;
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(

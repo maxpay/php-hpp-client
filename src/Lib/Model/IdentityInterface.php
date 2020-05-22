@@ -8,9 +8,13 @@ namespace Maxpay\Lib\Model;
  */
 interface IdentityInterface
 {
-    /** @return string */
+    /**
+     * @return string
+     */
     public function getPublicKey(): string;
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function getPrivateKey(): string;
 }

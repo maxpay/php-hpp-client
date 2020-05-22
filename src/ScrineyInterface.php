@@ -16,8 +16,8 @@ interface ScrineyInterface
      * Method build integration code of pay button
      *
      * @param string $userId User Id in your system
-     * @throws GeneralMaxpayException
      * @return ButtonBuilder
+     * @throws GeneralMaxpayException
      */
     public function buildButton(string $userId): ButtonBuilder;
 
@@ -26,16 +26,16 @@ interface ScrineyInterface
      *
      * @param string $billToken
      * @param string $userId
-     * @throws GeneralMaxpayException
      * @return RebillBuilder
+     * @throws GeneralMaxpayException
      */
     public function createRebillRequest(string $billToken, string $userId): RebillBuilder;
 
     /**
      * @param string $transactionId
      * @param string $userId
-     * @throws GeneralMaxpayException
      * @return array
+     * @throws GeneralMaxpayException
      */
     public function stopSubscription(string $transactionId, string $userId): array;
 
@@ -43,8 +43,8 @@ interface ScrineyInterface
      * @param string $transactionId
      * @param float $amount Money amount to be refunded.
      * @param string $currencyCode Transaction currency iso code.
-     * @throws GeneralMaxpayException
      * @return array
+     * @throws GeneralMaxpayException
      */
     public function refund(string $transactionId, float $amount, string $currencyCode): array;
 
@@ -53,8 +53,8 @@ interface ScrineyInterface
      *
      * @param string $data callback json string data from Maxpay.
      * @param array $headers headers from response from Maxpay.
-     * @throws GeneralMaxpayException
      * @return bool
+     * @throws GeneralMaxpayException
      */
     public function validateCallback(string $data, array $headers): bool;
 }
