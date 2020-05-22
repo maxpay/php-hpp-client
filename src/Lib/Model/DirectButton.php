@@ -17,14 +17,18 @@ class DirectButton extends BaseButton
     /** @var string */
     private $baseHost;
 
-    /** @param string $baseHost */
-    public function __construct($baseHost)
+    /**
+     * @param string $baseHost
+     */
+    public function __construct(string $baseHost)
     {
         $this->baseHost = $baseHost;
     }
 
-    /** @return string */
-    public function build()
+    /**
+     * @return void
+     */
+    public function build(): void
     {
         $body = "";
         foreach ($this->fieldList as $k => $v) {

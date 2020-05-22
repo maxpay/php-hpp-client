@@ -8,6 +8,8 @@ namespace Maxpay\Lib\Model;
  */
 interface ProductInterface
 {
-    /** @return array */
-    public function toHashMap();
+    /**
+     * @return array
+     */
+    public function toHashMap(): array;
 }

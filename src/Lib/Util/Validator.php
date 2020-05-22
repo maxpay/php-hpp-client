@@ -4,10 +4,8 @@ namespace Maxpay\Lib\Util;
 
 use Maxpay\Lib\Exception\EmptyArgumentException;
 use Maxpay\Lib\Exception\GeneralMaxpayException;
-use Maxpay\Lib\Exception\InvalidEncodingException;
 use Maxpay\Lib\Exception\InvalidStringLengthException;
 use Maxpay\Lib\Exception\NotNumericException;
-use Maxpay\Lib\Exception\NotStringException;
 
 /**
  * Class Validator
@@ -23,19 +21,16 @@ class Validator implements ValidatorInterface
      * @param string $value
      * @param int $minLength
      * @param int|null $maxLength
-     * @throws GeneralMaxpayException
      * @return string
+     * @throws GeneralMaxpayException
      */
-    public function validateString($paramName, $value, $minLength = 1, $maxLength = null)
+    public function validateString(string $paramName, string $value, int $minLength = 1, int $maxLength = null): string
     {
-        if (!is_string($value)) {
-            throw new NotStringException($paramName);
-        }
-        if (mb_strlen($value, $this->encoding) === 0) {
+        if (empty($value) || (mb_strlen($value, $this->encoding) === 0)) {
             throw new EmptyArgumentException($paramName);
         }
-        if (!is_null($maxLength) && is_int($maxLength)) {
-            if (mb_strlen($value, $this->encoding) > $maxLength ||  mb_strlen($value, $this->encoding) < $minLength) {
+        if (!is_null($maxLength)) {
+            if (mb_strlen($value, $this->encoding) > $maxLength || mb_strlen($value, $this->encoding) < $minLength) {
                 throw new InvalidStringLengthException($paramName, $minLength, $maxLength);
             }
         }
@@ -46,10 +41,10 @@ class Validator implements ValidatorInterface
     /**
      * @param string $paramName
      * @param float|int $value
-     * @throws GeneralMaxpayException
      * @return float|int
+     * @throws GeneralMaxpayException
      */
-    public function validateNumeric($paramName, $value)
+    public function validateNumeric(string $paramName, $value)
     {
         if (!is_int($value) && !is_float($value)) {
             throw new NotNumericException($paramName);
@@ -61,8 +56,10 @@ class Validator implements ValidatorInterface
         return $value;
     }
 
-    /** @return string */
-    public function getDefaultEncoding()
+    /**
+     * @return string
+     */
+    public function getDefaultEncoding(): string
     {
         return $this->encoding;
     }

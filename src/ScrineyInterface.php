@@ -16,51 +16,45 @@ interface ScrineyInterface
      * Method build integration code of pay button
      *
      * @param string $userId User Id in your system
-     * @throws GeneralMaxpayException
      * @return ButtonBuilder
+     * @throws GeneralMaxpayException
      */
-    public function buildButton($userId);
+    public function buildButton(string $userId): ButtonBuilder;
 
     /**
      * Method will return builder which allow to create and send rebill request
      *
      * @param string $billToken
      * @param string $userId
-     * @throws GeneralMaxpayException
      * @return RebillBuilder
+     * @throws GeneralMaxpayException
      */
-    public function createRebillRequest($billToken, $userId);
+    public function createRebillRequest(string $billToken, string $userId): RebillBuilder;
 
     /**
      * @param string $transactionId
      * @param string $userId
+     * @return array
      * @throws GeneralMaxpayException
-     * @return mixed[]
      */
-    public function stopSubscription($transactionId, $userId);
+    public function stopSubscription(string $transactionId, string $userId): array;
 
     /**
      * @param string $transactionId
+     * @param float $amount Money amount to be refunded.
+     * @param string $currencyCode Transaction currency iso code.
+     * @return array
      * @throws GeneralMaxpayException
-     * @return mixed[]
      */
-    public function refund($transactionId);
+    public function refund(string $transactionId, float $amount, string $currencyCode): array;
 
     /**
      * Method for validate callback
      *
-     * @param array $data callback data from Maxpay
-     * @throws GeneralMaxpayException
+     * @param string $data callback json string data from Maxpay.
+     * @param array $headers headers from response from Maxpay.
      * @return bool
-     */
-    public function validateCallback(array $data);
-
-    /**
-     * Method for validate api result
-     *
-     * @param array $data result received from Maxpay API
      * @throws GeneralMaxpayException
-     * @return bool
      */
-    public function validateApiResult(array $data);
+    public function validateCallback(string $data, array $headers): bool;
 }

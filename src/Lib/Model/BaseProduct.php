@@ -18,14 +18,14 @@ class BaseProduct implements ProductInterface
     const DISCOUNT_AMOUNT = 'amountOff';
     const DISCOUNT_PERCENT = 'percentOff';
 
-    const SUBSCRIPTION_24H   = '24H';
-    const SUBSCRIPTION_7D    = '7D';
-    const SUBSCRIPTION_30D   = '30D';
-    const SUBSCRIPTION_365D  = '365D';
+    const SUBSCRIPTION_24H = '24H';
+    const SUBSCRIPTION_7D = '7D';
+    const SUBSCRIPTION_30D = '30D';
+    const SUBSCRIPTION_365D = '365D';
 
-    const TRIAL_24H  = '24H';
-    const TRIAL_7D   = '7D';
-    const TRIAL_30D  = '30D';
+    const TRIAL_24H = '24H';
+    const TRIAL_7D = '7D';
+    const TRIAL_30D = '30D';
     const TRIAL_365D = '365D';
 
     /** @var string */
@@ -64,13 +64,13 @@ class BaseProduct implements ProductInterface
     /** @var int|null */
     private $subscriptionBillingCycles;
 
-    /** @var string|null  */
+    /** @var string|null */
     private $postTrialProductId;
 
-    /** @var int|null  */
+    /** @var int|null */
     private $postTrialLength;
 
-    /** @var string|null  */
+    /** @var string|null */
     private $postTrialPeriod;
 
     /**
@@ -78,35 +78,35 @@ class BaseProduct implements ProductInterface
      * @param string $productId
      * @param string $productName
      * @param string $currency
-     * @param int|float $amount
-     * @param int|float|null $discount
+     * @param float $amount
+     * @param float $discount
      * @param string|null $discountType
      * @param string|null $productDescription
      * @param int|null $subscriptionLength
      * @param string|null $subscriptionPeriod
      * @param int|null $subscriptionBillingCycles
-     * @param float|null $subscriptionEndDate
+     * @param float $subscriptionEndDate
      * @param string|null $postTrialProductId
      * @param int|null $postTrialLength
      * @param string|null $postTrialPeriod
      * @throws GeneralMaxpayException
      */
     public function __construct(
-        $type,
-        $productId,
-        $productName,
-        $currency,
-        $amount,
-        $discount = null,
-        $discountType = null,
-        $productDescription = null,
-        $subscriptionLength = null,
-        $subscriptionPeriod = null,
-        $subscriptionBillingCycles = null,
-        $subscriptionEndDate = null,
-        $postTrialProductId = null,
-        $postTrialLength = null,
-        $postTrialPeriod = null
+        string $type,
+        string $productId,
+        string $productName,
+        string $currency,
+        float $amount,
+        float $discount = null,
+        string $discountType = null,
+        string $productDescription = null,
+        int $subscriptionLength = null,
+        string $subscriptionPeriod = null,
+        int $subscriptionBillingCycles = null,
+        float $subscriptionEndDate = null,
+        string $postTrialProductId = null,
+        int $postTrialLength = null,
+        string $postTrialPeriod = null
     ) {
         $validator = new Validator();
         $type = $validator->validateString('productType', $type);
@@ -150,15 +150,13 @@ class BaseProduct implements ProductInterface
             }
 
             $this->subscriptionPeriod = $subscriptionPeriod;
-
             $this->subscriptionBillingCycles = is_null($subscriptionBillingCycles) ?
-            null :
-            $validator->validateNumeric('subscriptionBillingCycles', $subscriptionBillingCycles);
-
+                null :
+                $validator->validateNumeric('subscriptionBillingCycles', $subscriptionBillingCycles);
 
             $this->subscriptionEndDate = is_null($subscriptionEndDate) ?
-            null :
-            $validator->validateNumeric('subscriptionEndDate', $subscriptionEndDate);
+                null :
+                $validator->validateNumeric('subscriptionEndDate', $subscriptionEndDate);
         }
 
         if (!is_null($postTrialProductId) && $this->type === self::TYPE_TRIAL) {
@@ -172,8 +170,10 @@ class BaseProduct implements ProductInterface
         }
     }
 
-    /** @return array */
-    public function toHashMap()
+    /**
+     * @return array
+     */
+    public function toHashMap(): array
     {
         $result = [
             'productType' => $this->type,

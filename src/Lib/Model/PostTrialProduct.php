@@ -11,7 +11,7 @@ class PostTrialProduct extends BaseProduct
     /**
      * @param string $productId
      * @param string $productName
-     * @param string $amount
+     * @param float $amount
      * @param string $currency
      * @param string $postTrialProductId Existing product id from Mportal
      * @param int $trialLength
@@ -20,14 +20,14 @@ class PostTrialProduct extends BaseProduct
      * @throws \Maxpay\Lib\Exception\GeneralMaxpayException
      */
     public function __construct(
-        $productId,
-        $productName,
-        $amount,
-        $currency,
-        $postTrialProductId,
-        $trialLength,
-        $trialPeriod,
-        $productDescription = null
+        string $productId,
+        string $productName,
+        float $amount,
+        string $currency,
+        string $postTrialProductId,
+        int $trialLength,
+        string $trialPeriod,
+        string $productDescription = null
     ) {
         parent::__construct(
             self::TYPE_TRIAL,

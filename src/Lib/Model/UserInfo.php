@@ -47,14 +47,14 @@ class UserInfo implements UserInfoInterface
      * @throws GeneralMaxpayException
      */
     public function __construct(
-        $email,
-        $firstName = null,
-        $lastName = null,
-        $ISO3Country = null,
-        $city = null,
-        $postalCode = null,
-        $address = null,
-        $phone = null
+        string $email,
+        string $firstName = null,
+        string $lastName = null,
+        string $ISO3Country = null,
+        string $city = null,
+        string $postalCode = null,
+        string $address = null,
+        string $phone = null
     ) {
         $validator = new Validator();
         $this->email = $validator->validateString('email', $email);
@@ -81,9 +81,10 @@ class UserInfo implements UserInfoInterface
         }
     }
 
-
-    /** @return array */
-    public function toHashMap()
+    /**
+     * @return array
+     */
+    public function toHashMap(): array
     {
         $result = [
             'email' => $this->email,

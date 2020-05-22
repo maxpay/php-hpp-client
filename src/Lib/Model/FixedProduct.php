@@ -11,21 +11,21 @@ class FixedProduct extends BaseProduct
     /**
      * @param string $productId
      * @param string $productName
-     * @param string $amount
+     * @param float $amount
      * @param string $currency
-     * @param int|float|null $discount
+     * @param float|null $discount
      * @param string|null $discountType
      * @param string|null $productDescription
      * @throws \Maxpay\Lib\Exception\GeneralMaxpayException
      */
     public function __construct(
-        $productId,
-        $productName,
-        $amount,
-        $currency,
-        $discount = null,
-        $discountType = null,
-        $productDescription = null
+        string $productId,
+        string $productName,
+        float $amount,
+        string $currency,
+        float $discount = null,
+        string $discountType = null,
+        string $productDescription = null
     ) {
         parent::__construct(
             self::TYPE_FIXED,

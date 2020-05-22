@@ -22,7 +22,7 @@ class FrameButton extends BaseButton
      * @param string $width
      * @param string $baseHost
      */
-    public function __construct($height, $width, $baseHost)
+    public function __construct(string $height, string $width, string $baseHost)
     {
         $this->baseHost = $baseHost;
         $this->pushValue('type', 'integrated');
@@ -31,12 +31,14 @@ class FrameButton extends BaseButton
         $this->pushValue('width', $width);
     }
 
-    /** @return string */
-    public function build()
+    /**
+     * @return void
+     */
+    public function build(): void
     {
-        $body = "src='". $this->baseHost . $this->builderScriptName . ".js' ";
+        $body = "src='" . $this->baseHost . $this->builderScriptName . ".js' ";
         foreach ($this->fieldList as $key => $value) {
-            $body  .= "data-" . $key . "='" . $value . "' ";
+            $body .= "data-" . $key . "='" . $value . "' ";
         }
 
         $this->buttonCode = $this->codeStart .

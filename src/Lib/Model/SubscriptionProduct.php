@@ -11,29 +11,29 @@ class SubscriptionProduct extends BaseProduct
     /**
      * @param string $productId
      * @param string $productName
-     * @param string $amount
+     * @param float $amount
      * @param string $currency
      * @param int $subscriptionLength
-     * @param string $subscriptionPeriod  Allowed types - 24H, 7D, 30D, 365D
+     * @param string $subscriptionPeriod Allowed types - 24H, 7D, 30D, 365D
      * @param int|null $subscriptionBillingCycles
      * @param float|null $subscriptionEndDate
-     * @param int|float|null $discount
+     * @param float|null $discount
      * @param string|null $discountType
      * @param string|null $productDescription
      * @throws \Maxpay\Lib\Exception\GeneralMaxpayException
      */
     public function __construct(
-        $productId,
-        $productName,
-        $amount,
-        $currency,
-        $subscriptionLength,
-        $subscriptionPeriod,
-        $subscriptionBillingCycles = null,
-        $subscriptionEndDate = null,
-        $discount = null,
-        $discountType = null,
-        $productDescription = null
+        string $productId,
+        string $productName,
+        float $amount,
+        string $currency,
+        int $subscriptionLength,
+        string $subscriptionPeriod,
+        int $subscriptionBillingCycles = null,
+        float $subscriptionEndDate = null,
+        float $discount = null,
+        string $discountType = null,
+        string $productDescription = null
     ) {
         parent::__construct(
             self::TYPE_SUBSCRIPTION,

@@ -17,19 +17,21 @@ class PopupButton extends BaseButton
     /** @var string */
     private $baseHost;
 
-    public function __construct($baseHost)
+    public function __construct(string $baseHost)
     {
         $this->baseHost = $baseHost;
         $this->pushValue('type', 'popup');
         $this->pushValue('iframesrc', $this->baseHost . 'hpp');
     }
 
-    /** @return string */
-    public function build()
+    /**
+     * @return void
+     */
+    public function build(): void
     {
-        $body = "src='". $this->baseHost . $this->builderScriptName . ".js' ";
+        $body = "src='" . $this->baseHost . $this->builderScriptName . ".js' ";
         foreach ($this->fieldList as $key => $value) {
-            $body  .= "data-" . $key . "='" . $value . "' ";
+            $body .= "data-" . $key . "='" . $value . "' ";
         }
 
         $this->buttonCode = $this->codeStart . $body . $this->codeEnd;

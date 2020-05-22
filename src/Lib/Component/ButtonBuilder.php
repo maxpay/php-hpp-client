@@ -3,7 +3,6 @@
 namespace Maxpay\Lib\Component;
 
 use Maxpay\Lib\Exception\GeneralMaxpayException;
-use Maxpay\Lib\Exception\NotBooleanException;
 use Maxpay\Lib\Model\BaseButton;
 use Maxpay\Lib\Model\DirectButton;
 use Maxpay\Lib\Model\FrameButton;
@@ -21,10 +20,6 @@ use Psr\Log\LoggerInterface;
  */
 class ButtonBuilder extends BaseBuilder
 {
-    const TYPE_POPUP = 'popup';
-    const TYPE_DIRECT = 'direct';
-    const TYPE_FRAME = 'frame';
-
     /** @var ValidatorInterface */
     private $validator;
 
@@ -43,7 +38,7 @@ class ButtonBuilder extends BaseBuilder
     /** @var string */
     private $buttonText = 'Pay';
 
-    /** @var productInterface[] */
+    /** @var ProductInterface[] */
     private $customProducts = [];
 
     /** @var string */
@@ -61,7 +56,7 @@ class ButtonBuilder extends BaseBuilder
      * @param LoggerInterface $logger
      * @param string $baseHost
      */
-    public function __construct(IdentityInterface $identity, $userId, LoggerInterface $logger, $baseHost)
+    public function __construct(IdentityInterface $identity, string $userId, LoggerInterface $logger, string $baseHost)
     {
         parent::__construct($logger);
         $this->validator = new Validator();
@@ -79,11 +74,12 @@ class ButtonBuilder extends BaseBuilder
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */
-    public function setSuccessReturnUrl($successUrl)
+    public function setSuccessReturnUrl(string $successUrl): ButtonBuilder
     {
         try {
             $this->successUrl = $this->validator->validateString('successUrl', $successUrl);
             $this->logger->info('Field `successUrl` successfully set');
+
             return $this;
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(
@@ -104,11 +100,12 @@ class ButtonBuilder extends BaseBuilder
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */
-    public function setDeclineReturnUrl($declineUrl)
+    public function setDeclineReturnUrl(string $declineUrl): ButtonBuilder
     {
         try {
             $this->declineUrl = $this->validator->validateString('declineUrl', $declineUrl);
             $this->logger->info('Field `declineUrl` successfully set');
+
             return $this;
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(
@@ -129,15 +126,11 @@ class ButtonBuilder extends BaseBuilder
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */
-    public function setShowButton($value)
+    public function setShowButton(bool $value): ButtonBuilder
     {
-        if (!is_bool($value)) {
-            $this->logger->error('Invalid `show button` value, bool expected');
-            throw new NotBooleanException('showButton');
-        }
-
         $this->showButton = $value;
         $this->logger->info('Field `showButton` successfully set');
+
         return $this;
     }
 
@@ -148,12 +141,11 @@ class ButtonBuilder extends BaseBuilder
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */
-    public function setButtonText($buttonText)
+    public function setButtonText(string $buttonText): ButtonBuilder
     {
         try {
             $this->buttonText = $this->validator->validateString('buttonText', $buttonText);
             $this->logger->info('Field `buttonText` successfully set');
-            return $this;
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(
                 'Invalid button text',
@@ -164,16 +156,18 @@ class ButtonBuilder extends BaseBuilder
 
             throw $e;
         }
+
+        return $this;
     }
 
     /**
      * Set custom product - products will be summarized and displayed on payment page
      *
      * @param ProductInterface[] $products
-     * @throws GeneralMaxpayException
      * @return ButtonBuilder
+     * @throws GeneralMaxpayException
      */
-    public function setCustomProducts(array $products)
+    public function setCustomProducts(array $products): ButtonBuilder
     {
         foreach ($products as $product) {
             if (!$product instanceof ProductInterface) {
@@ -188,8 +182,10 @@ class ButtonBuilder extends BaseBuilder
         return $this;
     }
 
-    /** @return RenderableInterface */
-    public function buildPopup()
+    /**
+     * @return RenderableInterface
+     */
+    public function buildPopup(): RenderableInterface
     {
         return $this->build(new PopupButton($this->baseHost));
     }
@@ -197,10 +193,10 @@ class ButtonBuilder extends BaseBuilder
     /**
      * @param string $height
      * @param string $width
-     * @throws GeneralMaxpayException
      * @return RenderableInterface
+     * @throws GeneralMaxpayException
      */
-    public function buildFrame($height = 'auto', $width = 'auto')
+    public function buildFrame(string $height = 'auto', string $width = 'auto'): RenderableInterface
     {
         return $this->build(
             new FrameButton(
@@ -211,18 +207,19 @@ class ButtonBuilder extends BaseBuilder
         );
     }
 
-    /** @return RenderableInterface */
-    public function buildDirectForm()
+    /**
+     * @return RenderableInterface
+     */
+    public function buildDirectForm(): RenderableInterface
     {
         return $this->build(new DirectButton($this->baseHost));
     }
 
     /**
      * @param BaseButton $button
-     * @internal param string $type
      * @return RenderableInterface
      */
-    private function build(BaseButton $button)
+    private function build(BaseButton $button): RenderableInterface
     {
         $button->setKey($this->identity->getPrivateKey());
         $button->pushValue('key', $this->identity->getPublicKey());

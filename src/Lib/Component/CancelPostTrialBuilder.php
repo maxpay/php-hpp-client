@@ -47,9 +47,9 @@ class CancelPostTrialBuilder extends BaseBuilder
      */
     public function __construct(
         IdentityInterface $identity,
-        $transactionId,
+        string $transactionId,
         LoggerInterface $logger,
-        $baseHost
+        string $baseHost
     ) {
         parent::__construct($logger);
 
@@ -57,7 +57,7 @@ class CancelPostTrialBuilder extends BaseBuilder
         $this->identity = $identity;
         $this->transactionId = $this->validator->validateString('transactionId', $transactionId);
         $this->baseHost = $this->validator->validateString('baseHost', $baseHost);
-        $this->signatureHelper  = new SignatureHelper();
+        $this->signatureHelper = new SignatureHelper();
 
         $this->client = new CurlClient($baseHost . $this->action, $logger);
         $logger->info('Cancel post trial builder successfully initialized');
@@ -67,14 +67,14 @@ class CancelPostTrialBuilder extends BaseBuilder
      * @return array
      * @throws GeneralMaxpayException
      */
-    public function send()
+    public function send(): array
     {
         $data = [
             'transactionId' => $this->transactionId,
             'publicKey' => $this->identity->getPublicKey()
         ];
 
-        $data['signature'] = $this->signatureHelper->generate(
+        $data['signature'] = $this->signatureHelper->generateForArray(
             $data,
             $this->identity->getPrivateKey(),
             true

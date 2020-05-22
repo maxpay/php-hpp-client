@@ -30,23 +30,28 @@ abstract class BaseButton implements RenderableInterface
      * @param string $name
      * @param mixed $value
      */
-    public function pushValue($name, $value)
+    public function pushValue(string $name, $value): void
     {
         $this->unsafeFieldList[$name] = $value;
     }
 
-    /** @param string $key */
-    public function setKey($key)
+    /**
+     * @param string $key
+     */
+    public function setKey(string $key): void
     {
         $this->key = $key;
     }
 
-    private function setSignature()
+    /**
+     * @return void
+     */
+    private function setSignature(): void
     {
         $signatureHelper = new SignatureHelper();
         $this->pushValue(
             'signature',
-            $signatureHelper->generate(
+            $signatureHelper->generateForArray(
                 $this->unsafeFieldList,
                 $this->key,
                 true
@@ -54,31 +59,38 @@ abstract class BaseButton implements RenderableInterface
         );
     }
 
-    /** @return void */
-    abstract public function build();
+    /**
+     * @return void
+     */
+    abstract public function build(): void;
 
-    /** @return string */
-    public function asString()
+    /**
+     * @return string
+     */
+    public function asString(): string
     {
         $this->setSignature();
         $stringHelper = new StringHelper();
         foreach ($this->unsafeFieldList as $k => $v) {
-            $this->fieldList[
-                $stringHelper->encodeHtmlAttribute($k)
-            ] = $stringHelper->encodeHtmlAttribute($v);
+            $this->fieldList[$stringHelper->encodeHtmlAttribute($k)] = $stringHelper->encodeHtmlAttribute($v);
         }
         $this->build();
+
         return $this->buttonCode;
     }
 
-    /** @return void */
-    public function display()
+    /**
+     * @return void
+     */
+    public function display(): void
     {
         echo $this->asString();
     }
 
-    /** @return string */
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return $this->asString();
     }

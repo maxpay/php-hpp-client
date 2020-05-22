@@ -3,7 +3,6 @@
 namespace Maxpay\Lib\Component;
 
 use Maxpay\Lib\Exception\GeneralMaxpayException;
-use Maxpay\Lib\Exception\NotBooleanException;
 use Maxpay\Lib\Model\IdentityInterface;
 use Maxpay\Lib\Util\ClientInterface;
 use Maxpay\Lib\Util\CurlClient;
@@ -19,7 +18,7 @@ use Psr\Log\LoggerInterface;
 class RefundBuilder extends BaseBuilder
 {
     /** @var string */
-    private $action = 'api/refund';
+    private $action = 'api/extended_refund';
 
     /** @var IdentityInterface */
     private $identity;
@@ -51,9 +50,9 @@ class RefundBuilder extends BaseBuilder
      */
     public function __construct(
         IdentityInterface $identity,
-        $transactionId,
+        string $transactionId,
         LoggerInterface $logger,
-        $baseHost
+        string $baseHost
     ) {
         parent::__construct($logger);
 
@@ -63,23 +62,27 @@ class RefundBuilder extends BaseBuilder
         $this->transactionId = $this->validator->validateString('transactionId', $transactionId);
         $this->baseHost = $baseHost;
         $this->client = new CurlClient($this->baseHost . $this->action, $logger);
-        $this->signatureHelper  = new SignatureHelper();
+        $this->signatureHelper = new SignatureHelper();
 
         $this->logger->info('Refund builder successfully initialized');
     }
 
     /**
+     * @param float $amount
+     * @param string $currencyCode
      * @return array
      * @throws GeneralMaxpayException
      */
-    public function send()
+    public function send(float $amount, string $currencyCode): array
     {
         $data = [
             'transactionId' => $this->transactionId,
-            'publicKey' => $this->identity->getPublicKey()
+            'publicKey' => $this->identity->getPublicKey(),
+            'amount' => $amount,
+            'currency' => $currencyCode,
         ];
 
-        $data['signature'] = $this->signatureHelper->generate(
+        $data['signature'] = $this->signatureHelper->generateForArray(
             $data,
             $this->identity->getPrivateKey(),
             true

@@ -51,11 +51,16 @@ class RebillBuilder extends BaseBuilder
      * @param IdentityInterface $identity
      * @param string $billToken
      * @param string $userId
-     * @param string $baseHost
      * @param LoggerInterface $logger
+     * @param string $baseHost
      */
-    public function __construct(IdentityInterface $identity, $billToken, $userId, LoggerInterface $logger, $baseHost)
-    {
+    public function __construct(
+        IdentityInterface $identity,
+        string $billToken,
+        string $userId,
+        LoggerInterface $logger,
+        string $baseHost
+    ) {
         parent::__construct($logger);
         $this->validator = new Validator();
         $this->identity = $identity;
@@ -63,7 +68,7 @@ class RebillBuilder extends BaseBuilder
         $this->baseHost = $this->validator->validateString('baseHost', $baseHost);
         $this->billToken = $this->validator->validateString('billToken', $billToken);
         $this->userId = $this->validator->validateString('userId', $userId);
-        $this->signatureHelper  = new SignatureHelper();
+        $this->signatureHelper = new SignatureHelper();
         $this->client = new CurlClient($this->baseHost . $this->action, $logger);
 
         $this->logger->info('Rebill builder successfully initialized');
@@ -75,7 +80,7 @@ class RebillBuilder extends BaseBuilder
      * @param ProductInterface $product
      * @return RebillBuilder
      */
-    public function setCustomProduct(ProductInterface $product)
+    public function setCustomProduct(ProductInterface $product): RebillBuilder
     {
         $this->customProduct = $product;
         $this->logger->info('Custom product successfully set');
@@ -84,10 +89,10 @@ class RebillBuilder extends BaseBuilder
     }
 
     /**
+     * @return array
      * @throws GeneralMaxpayException
-     * @return mixed[]
      */
-    public function send()
+    public function send(): array
     {
         $preparedData = [
             'publicKey' => $this->identity->getPublicKey(),
@@ -113,7 +118,7 @@ class RebillBuilder extends BaseBuilder
             $preparedData = array_merge($preparedData, $this->customProduct->toHashMap());
         }
 
-        $preparedData['signature'] = $this->signatureHelper->generate(
+        $preparedData['signature'] = $this->signatureHelper->generateForArray(
             $preparedData,
             $this->identity->getPrivateKey(),
             true

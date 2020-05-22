@@ -53,10 +53,10 @@ class StopSubscriptionBuilder extends BaseBuilder
      */
     public function __construct(
         IdentityInterface $identity,
-        $userId,
-        $transactionId,
+        string $userId,
+        string $transactionId,
         LoggerInterface $logger,
-        $baseHost
+        string $baseHost
     ) {
         parent::__construct($logger);
 
@@ -67,7 +67,7 @@ class StopSubscriptionBuilder extends BaseBuilder
         $this->transactionId = $this->validator->validateString('transactionId', $transactionId);
         $this->baseHost = $baseHost;
         $this->client = new CurlClient($this->baseHost . $this->action, $logger);
-        $this->signatureHelper  = new SignatureHelper();
+        $this->signatureHelper = new SignatureHelper();
 
         $this->logger->info('Stop subscription builder successfully initialized');
     }
@@ -76,7 +76,7 @@ class StopSubscriptionBuilder extends BaseBuilder
      * @return array
      * @throws GeneralMaxpayException
      */
-    public function send()
+    public function send(): array
     {
         $data = [
             'uniqueUserId' => $this->userId,
@@ -84,7 +84,7 @@ class StopSubscriptionBuilder extends BaseBuilder
             'publicKey' => $this->identity->getPublicKey()
         ];
 
-        $data['signature'] = $this->signatureHelper->generate(
+        $data['signature'] = $this->signatureHelper->generateForArray(
             $data,
             $this->identity->getPrivateKey(),
             true
