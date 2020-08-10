@@ -29,7 +29,7 @@ class SignatureHelper
 
         $signature = $data . $secret;
 
-        return $this->optionalToLowerString($this->hashString($signature), $inLowercase);
+        return $this->hashString($this->optionalToLowerString($signature, $inLowercase));
     }
 
     /**
@@ -54,7 +54,7 @@ class SignatureHelper
         $signature = $this->implodeRecursive($data);
         $signature .= $secret;
 
-        return $this->optionalToLowerString($this->hashString($signature), $inLowercase);
+        return $this->hashString($this->optionalToLowerString($signature, $inLowercase));
     }
 
     private function optionalToLowerString(string $string, bool $toLower): string
