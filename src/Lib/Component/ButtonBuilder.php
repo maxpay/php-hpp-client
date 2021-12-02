@@ -259,7 +259,7 @@ class ButtonBuilder extends BaseBuilder
         if (!is_null($this->declineUrl)) {
             $button->pushValue('decline_url', $this->declineUrl);
         }
-        if (null !== $this->declineUrl) {
+        if (null !== $this->backUrl) {
             $button->pushValue('back_url', $this->backUrl);
         }
         if (!is_null($this->productId)) {
