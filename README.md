@@ -60,6 +60,8 @@ echo $scriney->buildButton('userId')->setSuccessReturnUrl(
         "https://example.com/success"
     )->setDeclineReturnUrl(
         "https://example.com/decline"
+    )->setBackUrl(
+        "https://example.com/back"
     )->buildPopup();
 ```
 
