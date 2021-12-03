@@ -50,6 +50,9 @@ class ButtonBuilder extends BaseBuilder
     /** @var string|null */
     private $declineUrl;
 
+    /** @var string|null */
+    private $backUrl;
+
     /**
      * @param IdentityInterface $identity
      * @param string $userId
@@ -110,6 +113,30 @@ class ButtonBuilder extends BaseBuilder
         } catch (GeneralMaxpayException $e) {
             $this->logger->error(
                 'Invalid decline url',
+                [
+                    'exception' => $e,
+                ]
+            );
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @param string $backUrl
+     * @return ButtonBuilder
+     * @throws GeneralMaxpayException
+     */
+    public function setBackUrl(string $backUrl): ButtonBuilder
+    {
+        try {
+            $this->backUrl = $this->validator->validateString('backUrl', $backUrl);
+            $this->logger->info('Field `backUrl` successfully set');
+
+            return $this;
+        } catch (GeneralMaxpayException $e) {
+            $this->logger->error(
+                'Invalid back url',
                 [
                     'exception' => $e,
                 ]
@@ -231,6 +258,9 @@ class ButtonBuilder extends BaseBuilder
         }
         if (!is_null($this->declineUrl)) {
             $button->pushValue('decline_url', $this->declineUrl);
+        }
+        if (null !== $this->backUrl) {
+            $button->pushValue('back_url', $this->backUrl);
         }
         if (!is_null($this->productId)) {
             $button->pushValue('productpublicid', $this->productId);
