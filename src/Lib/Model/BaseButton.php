@@ -1,30 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Model;
 
 use Maxpay\Lib\Util\SignatureHelper;
 use Maxpay\Lib\Util\StringHelper;
 
-/**
- * Class BaseButton
- * @package Maxpay\Lib\Model
- */
 abstract class BaseButton implements RenderableInterface
 {
-    /** @var string */
-    protected $builderScriptName = 'paymentPage';
+    protected string $builderScriptName = 'paymentPage';
 
     /** @var string[] */
-    protected $fieldList = [];
+    protected array $fieldList = [];
 
     /** @var string[] */
-    private $unsafeFieldList = [];
+    private array $unsafeFieldList = [];
 
-    /** @var string */
-    protected $buttonCode = '';
+    protected string $buttonCode = '';
 
-    /** @var string */
-    private $key = '';
+    private string $key = '';
 
     /**
      * @param string $name
@@ -35,17 +30,11 @@ abstract class BaseButton implements RenderableInterface
         $this->unsafeFieldList[$name] = $value;
     }
 
-    /**
-     * @param string $key
-     */
     public function setKey(string $key): void
     {
         $this->key = $key;
     }
 
-    /**
-     * @return void
-     */
     private function setSignature(): void
     {
         $signatureHelper = new SignatureHelper();
@@ -59,14 +48,8 @@ abstract class BaseButton implements RenderableInterface
         );
     }
 
-    /**
-     * @return void
-     */
     abstract public function build(): void;
 
-    /**
-     * @return string
-     */
     public function asString(): string
     {
         $this->setSignature();
@@ -79,17 +62,11 @@ abstract class BaseButton implements RenderableInterface
         return $this->buttonCode;
     }
 
-    /**
-     * @return void
-     */
     public function display(): void
     {
         echo $this->asString();
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->asString();

@@ -1,0 +1,25 @@
+name: Tests 3.x
+
+on:
+  push:
+    branches: [ 3.x ]
+  pull_request:
+    branches: [ 3.x ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.2', '8.3']
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+      - name: Install dependencies
+        run: composer install
+      - name: Run tests
+        run: make all

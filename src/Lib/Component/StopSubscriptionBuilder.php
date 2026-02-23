@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Component;
 
-use Maxpay\Lib\Exception\GeneralMaxpayException;
 use Maxpay\Lib\Model\IdentityInterface;
 use Maxpay\Lib\Util\ClientInterface;
 use Maxpay\Lib\Util\CurlClient;
@@ -11,46 +12,26 @@ use Maxpay\Lib\Util\Validator;
 use Maxpay\Lib\Util\ValidatorInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class StopSubscriptionBuilder
- * @package Maxpay\Lib\Component
- */
 class StopSubscriptionBuilder extends BaseBuilder
 {
-    /** @var string */
-    private $action = 'api/cancel';
+    private string $action = 'api/cancel';
 
-    /** @var IdentityInterface */
-    private $identity;
+    private IdentityInterface $identity;
 
-    /** @var ValidatorInterface */
-    private $validator;
+    private ValidatorInterface $validator;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var string */
-    private $baseHost;
+    private string $baseHost;
 
-    /** @var string */
-    private $userId;
+    private string $userId;
 
-    /** @var string */
-    private $transactionId;
+    private string $transactionId;
 
-    /** @var ClientInterface */
-    private $client;
+    private ClientInterface $client;
 
-    /** @var SignatureHelper */
-    private $signatureHelper;
+    private SignatureHelper $signatureHelper;
 
-    /**
-     * @param IdentityInterface $identity
-     * @param string $userId
-     * @param string $transactionId
-     * @param LoggerInterface $logger
-     * @param string $baseHost
-     */
     public function __construct(
         IdentityInterface $identity,
         string $userId,
@@ -72,10 +53,6 @@ class StopSubscriptionBuilder extends BaseBuilder
         $this->logger->info('Stop subscription builder successfully initialized');
     }
 
-    /**
-     * @return array
-     * @throws GeneralMaxpayException
-     */
     public function send(): array
     {
         $data = [
