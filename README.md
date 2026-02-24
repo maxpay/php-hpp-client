@@ -8,9 +8,9 @@ PHP library for Maxpay payment gateway integration.
 
 ## 📋 Version Support
 
-| Version | PHP Version | Status | Branch |
-|---------|-------------|--------|--------|
-| **3.x** | **8.2+** | ✅ **Active development** | [master](https://github.com/maxpay/php-hpp-client) |
+| Version | PHP Version | Status | Branch                                                   |
+|---------|-------------|--------|----------------------------------------------------------|
+| **3.x** | **8.2+** | ✅ **Active development** | [3.x](https://github.com/maxpay/php-hpp-client/tree/3.x) |
 | 2.x | 7.1 - 7.4 | 🔒 Security fixes only | [2.x](https://github.com/maxpay/php-hpp-client/tree/2.x) |
 
 ## 📦 Installation
