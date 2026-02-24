@@ -1,33 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Model;
 
-/**
- * Class DirectButton
- * @package Maxpay\Lib\Model
- */
 class DirectButton extends BaseButton
 {
-    /** @var string */
-    private $codeStart = "<form action='#action' class='redirect_form' method='post'>";
+    private string $codeStart = "<form action='#action' class='redirect_form' method='post'>";
 
-    /** @var string */
-    private $codeEnd = "<button type='submit'>Pay</button></form>";
+    private string $codeEnd = "<button type='submit'>Pay</button></form>";
 
-    /** @var string */
-    private $baseHost;
+    private string $baseHost;
 
-    /**
-     * @param string $baseHost
-     */
     public function __construct(string $baseHost)
     {
         $this->baseHost = $baseHost;
     }
 
-    /**
-     * @return void
-     */
     public function build(): void
     {
         $body = "";

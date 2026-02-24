@@ -1,11 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Model;
 
-/**
- * Class PostTrialProduct
- * @package Maxpay\Lib\Model
- */
 class PostTrialProduct extends BaseProduct
 {
     /**
@@ -27,7 +25,7 @@ class PostTrialProduct extends BaseProduct
         string $postTrialProductId,
         int $trialLength,
         string $trialPeriod,
-        string $productDescription = null
+        ?string $productDescription = null
     ) {
         parent::__construct(
             self::TYPE_TRIAL,

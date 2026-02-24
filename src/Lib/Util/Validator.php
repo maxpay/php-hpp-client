@@ -1,32 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Util;
 
 use Maxpay\Lib\Exception\EmptyArgumentException;
 use Maxpay\Lib\Exception\GeneralMaxpayException;
 use Maxpay\Lib\Exception\InvalidStringLengthException;
-use Maxpay\Lib\Exception\NotNumericException;
 
-/**
- * Class Validator
- * @package Maxpay\Lib\Util
- */
 class Validator implements ValidatorInterface
 {
-    /** @var string */
-    private $encoding = 'utf-8';
+    private string $encoding = 'utf-8';
 
-    /**
-     * @param string $paramName
-     * @param string $value
-     * @param int $minLength
-     * @param int|null $maxLength
-     * @return string
-     * @throws GeneralMaxpayException
-     */
-    public function validateString(string $paramName, string $value, int $minLength = 1, int $maxLength = null): string
+    public function validateString(string $paramName, string $value, int $minLength = 1, ?int $maxLength = null): string
     {
-        if (empty($value) || (mb_strlen($value, $this->encoding) === 0)) {
+        if ('' === $value) {
             throw new EmptyArgumentException($paramName);
         }
         if (!is_null($maxLength)) {
@@ -38,17 +26,8 @@ class Validator implements ValidatorInterface
         return $value;
     }
 
-    /**
-     * @param string $paramName
-     * @param float|int $value
-     * @return float|int
-     * @throws GeneralMaxpayException
-     */
-    public function validateNumeric(string $paramName, $value)
+    public function validateFloat(string $paramName, float $value): float
     {
-        if (!is_int($value) && !is_float($value)) {
-            throw new NotNumericException($paramName);
-        }
         if ($value <= 0) {
             throw new GeneralMaxpayException($paramName . 'must be greater than zero');
         }
@@ -56,9 +35,15 @@ class Validator implements ValidatorInterface
         return $value;
     }
 
-    /**
-     * @return string
-     */
+    public function validateInt(string $paramName, int $value): int
+    {
+        if ($value <= 0) {
+            throw new GeneralMaxpayException($paramName . 'must be greater than zero');
+        }
+
+        return $value;
+    }
+
     public function getDefaultEncoding(): string
     {
         return $this->encoding;

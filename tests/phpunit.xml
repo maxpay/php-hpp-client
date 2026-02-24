@@ -1,0 +1,13 @@
+<phpunit bootstrap="bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="false"
+         cacheResult="false">
+    <testsuites>
+        <testsuite name="PHP HPP Client">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

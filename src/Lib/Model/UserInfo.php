@@ -1,60 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Model;
 
-use Maxpay\Lib\Exception\GeneralMaxpayException;
 use Maxpay\Lib\Util\Validator;
 
-/**
- * Class UserInfo
- * @package Maxpay\Lib\Model
- */
 class UserInfo implements UserInfoInterface
 {
-    /** @var string */
-    private $email;
+    private string $email;
 
-    /** @var string|null */
-    private $firstName;
+    private ?string $firstName = null;
 
-    /** @var string|null */
-    private $lastName;
+    private ?string $lastName = null;
 
-    /** @var string|null */
-    private $ISO3Country;
+    private ?string $ISO3Country = null;
 
-    /** @var string|null */
-    private $city;
+    private ?string $city = null;
 
-    /** @var string|null */
-    private $postalCode;
+    private ?string $postalCode = null;
 
-    /** @var string|null */
-    private $address;
+    private ?string $address  = null;
 
-    /** @var string|null */
-    private $phone;
+    private ?string $phone  = null;
 
-    /**
-     * @param string $email
-     * @param string|null $firstName
-     * @param string|null $lastName
-     * @param string|null $ISO3Country
-     * @param string|null $city
-     * @param string|null $postalCode
-     * @param string|null $address
-     * @param string|null $phone
-     * @throws GeneralMaxpayException
-     */
     public function __construct(
         string $email,
-        string $firstName = null,
-        string $lastName = null,
-        string $ISO3Country = null,
-        string $city = null,
-        string $postalCode = null,
-        string $address = null,
-        string $phone = null
+        ?string $firstName = null,
+        ?string $lastName = null,
+        ?string $ISO3Country = null,
+        ?string $city = null,
+        ?string $postalCode = null,
+        ?string $address = null,
+        ?string $phone = null
     ) {
         $validator = new Validator();
         $this->email = $validator->validateString('email', $email);
@@ -81,9 +59,6 @@ class UserInfo implements UserInfoInterface
         }
     }
 
-    /**
-     * @return array
-     */
     public function toHashMap(): array
     {
         $result = [

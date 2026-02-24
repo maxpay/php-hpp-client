@@ -1,19 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Util;
 
 use Maxpay\Lib\Exception\GeneralMaxpayException;
 
-/**
- * Interface ClientInterface
- * @package Maxpay\Lib\Util
- */
 interface ClientInterface
 {
     /**
-     * @param mixed[] $data
-     * @return mixed[]
+     * @param array $data
+     * @return array
      * @throws GeneralMaxpayException
      */
-    public function send(array $data);
+    public function send(array $data): array;
 }

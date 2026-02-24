@@ -1,14 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Exception;
 
 class InvalidStringLengthException extends GeneralMaxpayException
 {
-    /**
-     * @param string $paramName
-     * @param int $maxLength
-     * @param int $minLength
-     */
     public function __construct(string $paramName, int $maxLength, int $minLength)
     {
         parent::__construct(

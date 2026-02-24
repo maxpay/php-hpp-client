@@ -1,40 +1,60 @@
-You can sign up for a maxpay account at https://my.maxpay.com/
+# Maxpay HPP Client
 
-# Requirements
+[![Latest Stable Version](https://poser.pugx.org/maxpay/hpp-client/v)](https://packagist.org/packages/maxpay/hpp-client)
+[![PHP Version Require](https://poser.pugx.org/maxpay/hpp-client/require/php)](https://packagist.org/packages/maxpay/hpp-client)
+[![License](https://poser.pugx.org/maxpay/hpp-client/license)](https://packagist.org/packages/maxpay/hpp-client)
 
-PHP 7.1 and later.
+PHP library for Maxpay payment gateway integration.
 
-# Composer
+## 📋 Version Support
 
-You can install the bindings via [Composer](http://getcomposer.org/). Run the following command:
+| Version | PHP Version | Status | Branch                                                   |
+|---------|-------------|--------|----------------------------------------------------------|
+| **3.x** | **8.2+** | ✅ **Active development** | [3.x](https://github.com/maxpay/php-hpp-client/tree/3.x) |
+| 2.x | 7.1 - 7.4 | 🔒 Security fixes only | [2.x](https://github.com/maxpay/php-hpp-client/tree/2.x) |
 
+## 📦 Installation
+
+### For PHP 8.2+ (Recommended)
 ```bash
 composer require maxpay/hpp-client
 ```
 
-To use the bindings, use Composer's [autoload](https://getcomposer.org/doc/00-intro.md#autoloading):
+### For PHP 7.1-7.4 (Legacy)
+```bash
+composer require maxpay/hpp-client:^2.0
+```
+
+## 🚀 Upgrading to 3.0
+
+Migrating from 2.x? See [UPGRADE-3.0.md](UPGRADE-3.0.md)
+
+
+## Getting Started
+You can sign up for a maxpay account at https://my.maxpay.com/
+
+To use the bindings, use Composer's [autoload](https://getcomposer.org/doc/00-intro.md#autoloading)
 
 ```php
 require_once('vendor/autoload.php');
 ```
 
-# Getting Started
 
-## Simple payment form:
+## Simple payment form
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 echo $scriney->buildButton('userId')->buildPopup();
 ```
 
-## Payment form with pre selected product:
+## Payment form with pre-selected product
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 echo $scriney->buildButton('userId')->setProductId('productIdInMportal')->buildPopup();
 ```
 
-## Payment form with filled user information:
+## Payment form with filled user information
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -47,25 +67,23 @@ echo $scriney->buildButton('userId')->setUserInfo(
               'Los angeles',
               '90217',
               '2896 Providence Lane',
-              '6267746913'
+              '+6267746913'
           )
       )->buildPopup();
 ```
 
-## Payment form with custom return urls:
+## Payment form with custom return urls
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
-echo $scriney->buildButton('userId')->setSuccessReturnUrl(
-        "https://example.com/success"
-    )->setDeclineReturnUrl(
-        "https://example.com/decline"
-    )->setBackUrl(
-        "https://example.com/back"
-    )->buildPopup();
+echo $scriney->buildButton('userId')
+    ->setSuccessReturnUrl("https://example.com/success")
+    ->setDeclineReturnUrl("https://example.com/decline")
+    ->setBackUrl("https://example.com/back")
+    ->buildPopup();
 ```
 
-## Payment form with custom params, params will be returned in callback:
+## Payment form with custom params, params will be returned in callback
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -77,7 +95,7 @@ echo $scriney->buildButton('userId')->setCustomParams(
     )->buildPopup();
 ```
 
-## Payment form with dynamic products:
+## Payment form with dynamic products
 
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
@@ -104,9 +122,9 @@ echo $scriney->buildButton('userId')->setCustomProducts(
           ]
       )->buildPopup();
 ```
-## Valdiate callback data:
-$data - json string of callback response data read from file_get_contents('php://input');
-$headers - array of callback response headers
+## Valdiate callback data
+\$data - json string of callback response data read from file_get_contents('php://input');
+\$headers - array of callback response headers
 ```php
 $scriney = new \Maxpay\Scriney('publicKey', 'privateKey');
 if ($scriney->validateCallback($data, $headers)) {

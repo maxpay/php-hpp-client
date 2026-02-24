@@ -1,21 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Model;
 
-/**
- * Class PopupButton
- * @package Maxpay\Lib\Model
- */
 class PopupButton extends BaseButton
 {
-    /** @var string */
-    private $codeStart = "<div><form class='pspPaymentForm'><script class='pspScript' ";
+    private string $codeStart = "<div><form class='pspPaymentForm'><script class='pspScript' ";
 
-    /** @var string */
-    private $codeEnd = "></script></form></div>";
+    private string $codeEnd = "></script></form></div>";
 
-    /** @var string */
-    private $baseHost;
+    private string $baseHost;
 
     public function __construct(string $baseHost)
     {
@@ -24,9 +19,6 @@ class PopupButton extends BaseButton
         $this->pushValue('iframesrc', $this->baseHost . 'hpp');
     }
 
-    /**
-     * @return void
-     */
     public function build(): void
     {
         $body = "src='" . $this->baseHost . $this->builderScriptName . ".js' ";

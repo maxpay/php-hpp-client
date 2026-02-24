@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Component;
 
 use Maxpay\Lib\Exception\GeneralMaxpayException;
@@ -14,51 +16,31 @@ use Maxpay\Lib\Util\Validator;
 use Maxpay\Lib\Util\ValidatorInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class ButtonBuilder
- * @package Maxpay\Lib\Component
- */
 class ButtonBuilder extends BaseBuilder
 {
-    /** @var ValidatorInterface */
-    private $validator;
+    private ValidatorInterface $validator;
 
-    /** @var IdentityInterface */
-    private $identity;
+    private IdentityInterface $identity;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var string */
-    private $userId;
+    private string $userId;
 
-    /** @var bool */
-    private $showButton = true;
+    private bool $showButton = true;
 
-    /** @var string */
-    private $buttonText = 'Pay';
+    private string $buttonText = 'Pay';
 
     /** @var ProductInterface[] */
-    private $customProducts = [];
+    private array $customProducts = [];
 
-    /** @var string */
-    private $baseHost;
+    private string $baseHost;
 
-    /** @var string|null */
-    private $successUrl;
+    private ?string $successUrl = null;
 
-    /** @var string|null */
-    private $declineUrl;
+    private ?string $declineUrl = null;
 
-    /** @var string|null */
-    private $backUrl;
+    private ?string $backUrl = null;
 
-    /**
-     * @param IdentityInterface $identity
-     * @param string $userId
-     * @param LoggerInterface $logger
-     * @param string $baseHost
-     */
     public function __construct(IdentityInterface $identity, string $userId, LoggerInterface $logger, string $baseHost)
     {
         parent::__construct($logger);
@@ -190,7 +172,6 @@ class ButtonBuilder extends BaseBuilder
     /**
      * Set custom product - products will be summarized and displayed on payment page
      *
-     * @param ProductInterface[] $products
      * @return ButtonBuilder
      * @throws GeneralMaxpayException
      */

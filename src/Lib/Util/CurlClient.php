@@ -1,33 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Util;
 
 use Maxpay\Lib\Exception\GeneralMaxpayException;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class CurlClient
- * @package Maxpay\Lib\Util
- */
 class CurlClient implements ClientInterface
 {
-    /** @var string */
-    private $url;
+    private string $url;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var ValidatorInterface */
-    private $validator;
+    private ValidatorInterface $validator;
 
-    const DEFAULT_CONNECT_TIMEOUT = 7500;
+    private const DEFAULT_CONNECT_TIMEOUT = 7500;
 
-    /**
-     * @param $url
-     * @param LoggerInterface $logger
-     * @throws GeneralMaxpayException
-     */
-    public function __construct($url, LoggerInterface $logger)
+    public function __construct(string $url, LoggerInterface $logger)
     {
         $this->validator = new Validator();
         $this->url = $this->validator->validateString('url', $url);
@@ -35,14 +25,15 @@ class CurlClient implements ClientInterface
     }
 
     /**
-     * @param mixed[] $data
-     * @return mixed[]
+     * @param array $data
+     * @return array
      * @throws GeneralMaxpayException
      */
-    public function send(array $data)
+    public function send(array $data): array
     {
         $start = microtime(true);
         $curl = curl_init();
+        // @phpstan-ignore-next-line
         curl_setopt($curl, CURLOPT_URL, $this->url);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT_MS, self::DEFAULT_CONNECT_TIMEOUT);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -59,44 +50,42 @@ class CurlClient implements ClientInterface
         $this->logger->info(
             'Received answer',
             [
-                'packetSize' => strlen($result),
+                'packetSize' => is_string($result) ? strlen($result) : 0,
                 'time' => microtime(true) - $start,
             ]
         );
 
-        if ($errno === CURLE_OPERATION_TIMEOUTED) {
-            $e = new GeneralMaxpayException('Client timeout');
+        if ($errno !== CURLE_OK) {
+            $exception = match (true) {
+                $errno === CURLE_OPERATION_TIMEOUTED => new GeneralMaxpayException('Client timeout'),
+
+                in_array($errno, [
+                    CURLE_SSL_CACERT,
+                    CURLE_SSL_CERTPROBLEM,
+                    CURLE_SSL_CIPHER,
+                    CURLE_SSL_CONNECT_ERROR,
+                    CURLE_SSL_PEER_CERTIFICATE,
+                    CURLE_SSL_ENGINE_NOTFOUND,
+                    CURLE_SSL_ENGINE_SETFAILED,
+                ], true) => new GeneralMaxpayException(
+                    'Client SSL error, code ' . $error,
+                    null,
+                    $errno
+                ),
+
+                default => new GeneralMaxpayException(
+                    'Client error ' . $error,
+                    null,
+                    $errno
+                ),
+            };
+
             $this->logger->error(
-                $e->getMessage(),
-                [
-                    'exception' => $e
-                ]
+                $exception->getMessage(),
+                ['exception' => $exception, 'errno' => $errno]
             );
 
-            throw $e;
-        } elseif ($errno === CURLE_SSL_CACERT
-            || $errno === CURLE_SSL_CERTPROBLEM
-            || $errno === CURLE_SSL_CIPHER
-            || $errno === CURLE_SSL_CONNECT_ERROR
-            || $errno === CURLE_SSL_PEER_CERTIFICATE
-            || $errno === CURLE_SSL_ENGINE_NOTFOUND
-            || $errno === CURLE_SSL_ENGINE_SETFAILED
-        ) {
-            $e = new GeneralMaxpayException('Client SSL error, code ' . $error, null, intval($errno));
-            $this->logger->error(
-                $e->getMessage(),
-                ['exception' => $e, 'errno' => $errno]
-            );
-
-            throw $e;
-        } elseif ($errno !== CURLE_OK) {
-            $e = new GeneralMaxpayException('Client error ' . $error, null, intval($errno));
-            $this->logger->error(
-                $e->getMessage(),
-                ['exception' => $e, 'errno' => $errno]
-            );
-
-            throw $e;
+            throw $exception;
         }
 
         if ($result === false) {
@@ -108,10 +97,12 @@ class CurlClient implements ClientInterface
 
             throw $e;
         }
+        if (!is_string($result)) {
+            throw new GeneralMaxpayException('Curl result should be a string');
+        }
 
         try {
             $result = $this->decode($result);
-
         } catch (\Exception $exception) {
             $error = new GeneralMaxpayException('Failed to decode answer', $exception);
             $this->logger->error(
@@ -124,12 +115,7 @@ class CurlClient implements ClientInterface
         return $result;
     }
 
-    /**
-     * @param string $stringAnswer
-     * @return mixed[]
-     * @throws GeneralMaxpayException
-     */
-    private function decode($stringAnswer)
+    private function decode(string $stringAnswer): array
     {
         $stringAnswer = $this->validator->validateString('answer', $stringAnswer);
 

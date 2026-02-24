@@ -1,14 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Model;
 
 use Maxpay\Lib\Exception\GeneralMaxpayException;
 use Maxpay\Lib\Util\Validator;
 
-/**
- * Class BaseProduct
- * @package Maxpay\Lib\Model
- */
 class BaseProduct implements ProductInterface
 {
     const TYPE_SUBSCRIPTION = 'subscriptionProduct';
@@ -28,85 +26,52 @@ class BaseProduct implements ProductInterface
     const TRIAL_30D = '30D';
     const TRIAL_365D = '365D';
 
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var string */
-    private $productId;
+    private string $productId;
 
-    /** @var string */
-    private $productName;
+    private string $productName;
 
-    /** @var string|null */
-    private $productDescription;
+    private ?string $productDescription;
 
-    /** @var string */
-    private $currency;
+    private string $currency;
 
-    /** @var int|float */
-    private $amount;
+    private float $amount;
 
-    /** @var int|float|null */
-    private $discount;
+    private ?float $discount = null;
 
-    /** @var string|null */
-    private $discountType;
+    private ?string $discountType = null;
 
-    /** @var int|null */
-    private $subscriptionLength;
+    private ?int $subscriptionLength = null;
 
-    /** @var string|null */
-    private $subscriptionPeriod;
+    private ?string $subscriptionPeriod = null;
 
-    /** @var float|null */
-    private $subscriptionEndDate;
+    private ?float $subscriptionEndDate = null;
 
-    /** @var int|null */
-    private $subscriptionBillingCycles;
+    private ?int $subscriptionBillingCycles = null;
 
-    /** @var string|null */
-    private $postTrialProductId;
+    private ?string $postTrialProductId = null;
 
-    /** @var int|null */
-    private $postTrialLength;
+    private ?int $postTrialLength = null;
 
-    /** @var string|null */
-    private $postTrialPeriod;
+    private ?string $postTrialPeriod = null;
 
-    /**
-     * @param string $type
-     * @param string $productId
-     * @param string $productName
-     * @param string $currency
-     * @param float $amount
-     * @param float $discount
-     * @param string|null $discountType
-     * @param string|null $productDescription
-     * @param int|null $subscriptionLength
-     * @param string|null $subscriptionPeriod
-     * @param int|null $subscriptionBillingCycles
-     * @param float $subscriptionEndDate
-     * @param string|null $postTrialProductId
-     * @param int|null $postTrialLength
-     * @param string|null $postTrialPeriod
-     * @throws GeneralMaxpayException
-     */
     public function __construct(
         string $type,
         string $productId,
         string $productName,
         string $currency,
         float $amount,
-        float $discount = null,
-        string $discountType = null,
-        string $productDescription = null,
-        int $subscriptionLength = null,
-        string $subscriptionPeriod = null,
-        int $subscriptionBillingCycles = null,
-        float $subscriptionEndDate = null,
-        string $postTrialProductId = null,
-        int $postTrialLength = null,
-        string $postTrialPeriod = null
+        ?float $discount = null,
+        ?string $discountType = null,
+        ?string $productDescription = null,
+        ?int $subscriptionLength = null,
+        ?string $subscriptionPeriod = null,
+        ?int $subscriptionBillingCycles = null,
+        ?float $subscriptionEndDate = null,
+        ?string $postTrialProductId = null,
+        ?int $postTrialLength = null,
+        ?string $postTrialPeriod = null
     ) {
         $validator = new Validator();
         $type = $validator->validateString('productType', $type);
@@ -118,12 +83,12 @@ class BaseProduct implements ProductInterface
         $this->productId = $validator->validateString('productId', $productId);
         $this->productName = $validator->validateString('productName', $productName);
         $this->currency = $validator->validateString('currency', $currency, 3, 3);
-        $this->amount = $validator->validateNumeric('amount', $amount);
+        $this->amount = $validator->validateFloat('amount', $amount);
         $this->productDescription = is_null($productDescription) ?
             null :
             $validator->validateString('productDescription', $productDescription);
 
-        $this->discount = is_null($discount) ? null : $validator->validateNumeric('discount', $discount);
+        $this->discount = is_null($discount) ? null : $validator->validateFloat('discount', $discount);
 
         if (!is_null($discountType)) {
             $discountType = $validator->validateString('discountType', $discountType);
@@ -134,8 +99,8 @@ class BaseProduct implements ProductInterface
         }
 
         if (!is_null($subscriptionLength) && $this->type === self::TYPE_SUBSCRIPTION) {
-            $this->subscriptionLength = $validator->validateNumeric('subscriptionLength', $subscriptionLength);
-            $subscriptionPeriod = $validator->validateString('subscriptionPeriod', $subscriptionPeriod);
+            $this->subscriptionLength = $validator->validateInt('subscriptionLength', $subscriptionLength);
+            $subscriptionPeriod = $validator->validateString('subscriptionPeriod', $subscriptionPeriod ?? '');
 
             if (!in_array(
                 $subscriptionPeriod,
@@ -152,17 +117,17 @@ class BaseProduct implements ProductInterface
             $this->subscriptionPeriod = $subscriptionPeriod;
             $this->subscriptionBillingCycles = is_null($subscriptionBillingCycles) ?
                 null :
-                $validator->validateNumeric('subscriptionBillingCycles', $subscriptionBillingCycles);
+                $validator->validateInt('subscriptionBillingCycles', $subscriptionBillingCycles);
 
             $this->subscriptionEndDate = is_null($subscriptionEndDate) ?
                 null :
-                $validator->validateNumeric('subscriptionEndDate', $subscriptionEndDate);
+                $validator->validateFloat('subscriptionEndDate', $subscriptionEndDate);
         }
 
         if (!is_null($postTrialProductId) && $this->type === self::TYPE_TRIAL) {
             $this->postTrialProductId = $validator->validateString('postTrialProductId', $postTrialProductId);
-            $this->postTrialLength = $validator->validateNumeric('postTrialLength', $postTrialLength);
-            $postTrialPeriod = $validator->validateString('postTrialPeriod', $postTrialPeriod);
+            $this->postTrialLength = $validator->validateInt('postTrialLength', $postTrialLength ?? 0);
+            $postTrialPeriod = $validator->validateString('postTrialPeriod', $postTrialPeriod ?? '');
             if (!in_array($postTrialPeriod, [self::TRIAL_24H, self::TRIAL_7D, self::TRIAL_30D, self::TRIAL_365D])) {
                 throw new GeneralMaxpayException('Invalid post trial period given');
             }
@@ -170,9 +135,6 @@ class BaseProduct implements ProductInterface
         }
     }
 
-    /**
-     * @return array
-     */
     public function toHashMap(): array
     {
         $result = [

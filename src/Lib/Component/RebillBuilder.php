@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Component;
 
-use Maxpay\Lib\Exception\GeneralMaxpayException;
 use Maxpay\Lib\Model\IdentityInterface;
 use Maxpay\Lib\Model\ProductInterface;
 use Maxpay\Lib\Util\CurlClient;
@@ -11,49 +12,28 @@ use Maxpay\Lib\Util\Validator;
 use Maxpay\Lib\Util\ValidatorInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class RebillBuilder
- * @package Maxpay\Lib\Component
- */
 class RebillBuilder extends BaseBuilder
 {
-    /** @var string */
-    private $action = 'api/rebilling';
+    private string $action = 'api/rebilling';
 
-    /** @var string */
-    private $baseHost;
+    private string $baseHost;
 
-    /** @var ValidatorInterface */
-    private $validator;
+    private ValidatorInterface $validator;
 
-    /** @var IdentityInterface */
-    private $identity;
+    private IdentityInterface $identity;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var string */
-    private $billToken;
+    private string $billToken;
 
-    /** @var string */
-    private $userId;
+    private string $userId;
 
-    /** @var ProductInterface|null */
-    private $customProduct;
+    private ?ProductInterface $customProduct = null;
 
-    /** @var SignatureHelper */
-    private $signatureHelper;
+    private SignatureHelper $signatureHelper;
 
-    /** @var CurlClient */
-    private $client;
+    private CurlClient $client;
 
-    /**
-     * @param IdentityInterface $identity
-     * @param string $billToken
-     * @param string $userId
-     * @param LoggerInterface $logger
-     * @param string $baseHost
-     */
     public function __construct(
         IdentityInterface $identity,
         string $billToken,
@@ -88,10 +68,6 @@ class RebillBuilder extends BaseBuilder
         return $this;
     }
 
-    /**
-     * @return array
-     * @throws GeneralMaxpayException
-     */
     public function send(): array
     {
         $preparedData = [
@@ -108,7 +84,7 @@ class RebillBuilder extends BaseBuilder
             $preparedData = array_merge($preparedData, $this->userInfo->toHashMap());
         }
 
-        if (is_array($this->customParams)) {
+        if (count($this->customParams) > 0) {
             foreach ($this->customParams as $k => $v) {
                 $preparedData[$k] = $v;
             }

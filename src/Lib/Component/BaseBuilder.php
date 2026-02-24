@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maxpay\Lib\Component;
 
 use Maxpay\Lib\Exception\EmptyArgumentException;
@@ -9,32 +11,21 @@ use Maxpay\Lib\Util\Validator;
 use Maxpay\Lib\Util\ValidatorInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class BaseBuilder
- * @package Maxpay\Lib\Component
- */
 abstract class BaseBuilder
 {
     const CUSTOM_PARAM_PREFIX = 'custom_';
 
-    /** @var UserInfoInterface|null */
-    protected $userInfo;
+    protected ?UserInfoInterface $userInfo = null;
 
-    /** @var array */
-    protected $customParams = [];
+    /** @var array<string, string>  */
+    protected array $customParams = [];
 
-    /** @var string|null */
-    protected $productId;
+    protected ?string $productId = null;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var ValidatorInterface */
-    private $validator;
+    private ValidatorInterface $validator;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger)
     {
         $this->validator = new Validator();
@@ -59,7 +50,7 @@ abstract class BaseBuilder
      * Set custom params - params will be returned in callback
      * e.g. ['custom_some_param' => 'some value']
      *
-     * @param array $params
+     * @param array<string, string> $params
      * @return BaseBuilder
      * @throws GeneralMaxpayException
      */
